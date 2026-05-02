@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pizza Math Kitchen 🍕</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Bubblegum+Sans&display=swap');
+
+:root {
+  --tomato:   #e63946;
+  --cheese:   #f4a261;
+  --basil:    #2a9d8f;
+  --dough:    #f8edeb;
+  --crust:    #e9c46a;
+  --sky:      #a8dadc;
+  --night:    #1d3557;
+  --white:    #ffffff;
+  --shadow:   rgba(0,0,0,0.13);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Baloo 2', cursive;
+  background: #fff8f0;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── ANIMATED BG ── */
+.bg-scene {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background: linear-gradient(180deg, #ffecd2 0%, #fcb69f 100%);
+  overflow: hidden;
+}
+.bg-scene::before {
+  content: '';
+  position: absolute; top: -60px; left: -60px; right: -60px; bottom: -60px;
+  background: radial-gradient(circle at 20% 20%, rgba(255,220,150,0.4) 0%, transparent 50%),
+              radial-gradient(circle at 80% 80%, rgba(230,100,80,0.2) 0%, transparent 50%);
+  animation: bgPulse 8s ease-in-out infinite alternate;
+}
+@keyframes bgPulse { from{opacity:0.6} to{opacity:1} }
+
+.floating-emoji {
+  position: absolute;
+  font-size: 2.2rem;
+  animation: floatUp linear infinite;
+  opacity: 0.18;
+  user-select: none;
+}
+@keyframes floatUp {
+  from { transform: translateY(110vh) rotate(0deg); }
+  to   { transform: translateY(-10vh) rotate(360deg); }
+}
+
+/* ── LAYOUT ── */
+.wrapper { position: relative; z-index: 1; max-width: 860px; margin: 0 auto; padding: 0 14px 80px; }
+
+/* ── HEADER ── */
+.header {
+  text-align: center;
+  padding: 38px 20px 22px;
+  animation: dropIn 0.7s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+@keyframes dropIn { from{transform:translateY(-60px);opacity:0} to{transform:translateY(0);opacity:1} }
+.header h1 {
+  font-family: 'Bubblegum Sans', cursive;
+  font-size: clamp(2.2rem, 6vw, 3.6rem);
+  color: var(--tomato);
+  text-shadow: 4px 4px 0 #f4a261, 7px 7px 0 rgba(230,57,70,0.2);
+  line-height: 1.1;
+}
+.header p {
+  font-size: 1.05rem;
+  color: #7b4f2e;
+  margin-top: 8px;
+  font-weight: 600;
+}
+
+/* ── STARS / SCORE ── */
+.hud {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--night);
+  color: white;
+  border-radius: 60px;
+  padding: 10px 24px;
+  margin-bottom: 26px;
+  font-weight: 700;
+  font-size: 1rem;
+  box-shadow: 0 4px 18px rgba(29,53,87,0.3);
+  animation: dropIn 0.8s 0.1s both;
+}
+.hud .stars span { font-size: 1.3rem; transition: transform 0.3s; }
+.hud .stars span.lit { filter: drop-shadow(0 0 6px gold); transform: scale(1.2); }
+.hud .level-tag {
+  background: var(--tomato);
+  border-radius: 99px;
+  padding: 3px 16px;
+  font-size: 0.88rem;
+  letter-spacing: 0.5px;
+}
+
+/* ── TAB NAV ── */
+.tab-nav {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 22px;
+  animation: dropIn 0.8s 0.15s both;
+  flex-wrap: wrap;
+}
+.tab-btn {
+  flex: 1;
+  min-width: 120px;
+  padding: 12px 8px;
+  border: none;
+  border-radius: 16px;
+  font-family: 'Bubblegum Sans', cursive;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: transform 0.18s, box-shadow 0.18s;
+  box-shadow: 0 4px 0 rgba(0,0,0,0.15);
+  color: white;
+  text-align: center;
+}
+.tab-btn:hover { transform: translateY(-3px); box-shadow: 0 7px 0 rgba(0,0,0,0.12); }
+.tab-btn.active { transform: translateY(3px); box-shadow: 0 1px 0 rgba(0,0,0,0.12); }
+.tab-btn.t-frac  { background: linear-gradient(135deg, #e63946, #f4845f); }
+.tab-btn.t-add   { background: linear-gradient(135deg, #2a9d8f, #43c59e); }
+.tab-btn.t-sub   { background: linear-gradient(135deg, #e9c46a, #f4a261); color: #7b4f2e; }
+
+/* ── GAME CARD ── */
+.game-card {
+  background: white;
+  border-radius: 28px;
+  box-shadow: 0 8px 36px rgba(0,0,0,0.13), 0 2px 0 #f4a261;
+  overflow: hidden;
+  display: none;
+  animation: cardIn 0.4s cubic-bezier(0.34,1.3,0.64,1) both;
+}
+.game-card.active { display: block; }
+@keyframes cardIn { from{transform:scale(0.92);opacity:0} to{transform:scale(1);opacity:1} }
+
+.game-card-header {
+  padding: 20px 26px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.game-card-header .game-icon { font-size: 2.4rem; }
+.game-card-header h2 {
+  font-family: 'Bubblegum Sans', cursive;
+  font-size: 1.55rem;
+  color: var(--night);
+}
+.game-card-header p { font-size: 0.9rem; color: #888; font-weight: 600; }
+
+/* ── FRACTION PIZZA GAME ── */
+.pizza-arena {
+  padding: 10px 26px 28px;
+}
+.pizza-instruction {
+  background: #fff3e0;
+  border-left: 5px solid var(--cheese);
+  border-radius: 12px;
+  padding: 14px 18px;
+  margin-bottom: 20px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #7b4f2e;
+  line-height: 1.5;
+}
+.pizza-instruction b { color: var(--tomato); font-size: 1.1em; }
+
+.pizza-wrap {
+  display: flex;
+  gap: 28px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.pizza-svg-wrap {
+  position: relative;
+  cursor: pointer;
+  filter: drop-shadow(0 6px 14px rgba(0,0,0,0.15));
+  transition: transform 0.2s;
+}
+.pizza-svg-wrap:hover { transform: scale(1.04); }
+
+.pizza-panel {
+  flex: 1;
+  min-width: 220px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.pizza-fraction-display {
+  text-align: center;
+  font-family: 'Bubblegum Sans', cursive;
+  font-size: 1.1rem;
+  color: var(--night);
+}
+.frac-big {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 2.4rem;
+  line-height: 1;
+  color: var(--tomato);
+  gap: 2px;
+}
+.frac-big .fline { width: 100%; height: 4px; background: var(--tomato); border-radius: 3px; display: block; }
+
+.slice-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.slice-opt {
+  background: #fff8f0;
+  border: 3px solid #ffe0b2;
+  border-radius: 16px;
+  padding: 14px 10px;
+  text-align: center;
+  cursor: pointer;
+  font-family: 'Bubblegum Sans', cursive;
+  font-size: 1.2rem;
+  color: var(--night);
+  transition: all 0.18s;
+}
+.slice-opt:hover { background: #ffe0b2; transform: translateY(-3px); border-color: var(--cheese); }
+.slice-opt.correct { background: #d4edda; border-color: #28a745; color: #155724; }
+.slice-opt.wrong   { background: #f8d7da; border-color: #dc3545; color: #721c24; }
+.slice-opt:disabled { cursor: default; transform: none; }
+
+/* ── NUMBER LINE / BALLOON GAME ── */
+.balloon-game {
+  padding: 16px 26px 28px;
+}
+.balloon-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 22px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.balloon {
+  width: 72px; height: 88px;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.2s;
+  user-select: none;
+}
+.balloon:hover { transform: scale(1.12) translateY(-6px); }
+.balloon svg { width: 100%; height: 100%; }
+.balloon .b-label {
+  position: absolute;
+  top: 28%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Bubblegum Sans', cursive;
+  font-size: 1.25rem;
+  color: white;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  pointer-events: none;
+}
+.balloon.popped { animation: pop 0.35s forwards; }
+@keyframes pop {
+  0%   { transform: scale(1.4); opacity: 1; }
+  60%  { transform: scale(0.1) rotate(30deg); opacity: 0.4; }
+  100% { transform: scale(0); opacity: 0; }
+}
+.balloon.wrong-shake { animation: shake 0.4s; }
+@keyframes shake {
+  0%,100%{ transform:translateX(0) }
+  20%    { transform:translateX(-8px) }
+  50%    { transform:translateX(8px) }
+  80%    { transform:translateX(-5px) }
+}
+
+.add-question-box {
+  background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+  border-radius: 20px;
+  padding: 22px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+.add-question-box .eq {
+  font-family: 'Bubblegum Sans', cursive;
+  font-size: 2.2rem;
+  color: #1b5e20;
+}
+.add-question-box p { font-size: 0.92rem; color: #388e3c; font-weight: 600; margin-top: 4px; }
+
+/* ── SUBTRACTION JUMP GAME ── */
+.jump-game { padding: 16px 26px 28px; }
+.number-line-wrap {
+  overflow-x: auto;
+  padding: 10px 0 20px;
+  margin-bottom: 18px;
+}
+.number-line {
+  display: flex;
+  align-items: flex-end;
+  gap: 0;
+  min-width: 540px;
+  position: relative;
+  height: 110px;
+  padding: 0 20px;
+}
+.nl-bar {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  right: 20px;
+  height: 6px;
+  background: #e9c46a;
+  border-radius: 3px;
+}
+.nl-tick {
+  position: absolute;
+  bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: translateX(-50%);
+}
+.nl-tick .tick-line { width: 3px; height: 16px; background: #e9c46a; border-radius: 2px; }
+.nl-tick .tick-num  { font-family: 'Bubblegum Sans', cursive; font-size: 1rem; color: #7b4f2e; margin-top: 5px; }
+
+.nl-frog {
+  position: absolute;
+  bottom: 30px;
+  font-size: 2rem;
+  transform: translateX(-50%);
+  transition: left 0.5s cubic-bezier(0.34,1.56,0.64,1);
+  filter: drop-shadow(0 3px 6px rgba(0,0,0,0.2));
+}
+.nl-jump-arc {
+  position: absolute;
+  bottom: 36px;
+  border-top: 3px dashed rgba(42,157,143,0.5);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.sub-question-box {
+  background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+  border-radius: 20px;
+  padding: 22px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+.sub-question-box .eq {
+  font-family: 'Bubblegum Sans', cursive;
+  font-size: 2.2rem;
+  color: #0d47a1;
+}
+.sub-question-box p { font-size: 0.92rem; color: #1565c0; font-weight: 600; margin-top: 4px; }
+
+.answer-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+@media (max-width: 480px) { .answer-grid { grid-template-columns: repeat(2,1fr); } }
+.ans-btn {
+  background: white;
+  border: 3px solid #bbdefb;
+  border-radius: 16px;
+  padding: 14px 6px;
+  font-family: 'Bubblegum Sans', cursive;
+  font-size: 1.4rem;
+  color: var(--night);
+  cursor: pointer;
+  transition: all 0.18s;
+  box-shadow: 0 3px 0 #90caf9;
+}
+.ans-btn:hover:not(:disabled) { background: #e3f2fd; transform: translateY(-3px); box-shadow: 0 6px 0 #90caf9; }
+.ans-btn.correct { background: #c8e6c9; border-color: #43a047; color: #1b5e20; box-shadow: 0 3px 0 #43a047; }
+.ans-btn.wrong   { background: #ffcdd2; border-color: #e53935; color: #b71c1c; box-shadow: 0 3px 0 #e53935; animation: shake 0.35s; }
+
+/* ── FEEDBACK TOAST ── */
+.toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(120px);
+  background: var(--night);
+  color: white;
+  font-family: 'Bubblegum Sans', cursive;
+  font-size: 1.2rem;
+  padding: 14px 34px;
+  border-radius: 99px;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.22);
+  z-index: 999;
+  transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  pointer-events: none;
+  white-space: nowrap;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+.toast.good { background: #1b5e20; }
+.toast.bad  { background: #b71c1c; }
+
+/* ── NEXT BTN ── */
+.next-btn {
+  display: block;
+  margin: 18px auto 0;
+  background: linear-gradient(135deg, var(--tomato), var(--cheese));
+  color: white;
+  border: none;
+  border-radius: 99px;
+  padding: 13px 44px;
+  font-family: 'Bubblegum Sans', cursive;
+  font-size: 1.2rem;
+  cursor: pointer;
+  box-shadow: 0 5px 0 #c1440e;
+  transition: transform 0.18s, box-shadow 0.18s;
+}
+.next-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 0 #c1440e; }
+.next-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 #c1440e; }
+
+/* ── CELEBRATION OVERLAY ── */
+.celebration {
+  position: fixed; inset: 0; z-index: 500;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: rgba(0,0,0,0.55);
+  display: none;
+}
+.celebration.show { display: flex; }
+.celeb-card {
+  background: white;
+  border-radius: 30px;
+  padding: 48px 56px;
+  text-align: center;
+  animation: pop2 0.5s cubic-bezier(0.34,1.56,0.64,1);
+  max-width: 400px;
+  width: 90%;
+}
+@keyframes pop2 { from{transform:scale(0.5);opacity:0} to{transform:scale(1);opacity:1} }
+.celeb-card .celeb-emoji { font-size: 5rem; }
+.celeb-card h2 { font-family: 'Bubblegum Sans', cursive; font-size: 2.4rem; color: var(--tomato); margin: 12px 0 8px; }
+.celeb-card p  { font-size: 1.05rem; color: #555; font-weight: 600; }
+.celeb-stars   { font-size: 2rem; margin: 10px 0; }
+.confetti-emoji { position: fixed; font-size: 2rem; animation: confettiFall 2s ease-in forwards; pointer-events: none; z-index: 501; }
+@keyframes confettiFall { from{top:-5%;opacity:1} to{top:110%;opacity:0} }
+
+/* ── HOW TO PLAY ── */
+.howto {
+  background: #fff3e0;
+  border-radius: 20px;
+  padding: 18px 22px;
+  margin-bottom: 24px;
+  font-size: 0.92rem;
+  color: #7b4f2e;
+  font-weight: 600;
+  animation: dropIn 0.8s 0.25s both;
+}
+.howto ul { list-style: none; display: flex; flex-direction: column; gap: 6px; padding-left: 4px; }
+.howto li::before { content: '👉 '; }
+</style>
+</head>
+<body>
+
+<!-- Animated background -->
+<div class="bg-scene">
+  <div class="floating-emoji" style="left:5%;animation-duration:14s;animation-delay:0s">🍕</div>
+  <div class="floating-emoji" style="left:20%;animation-duration:18s;animation-delay:3s">➕</div>
+  <div class="floating-emoji" style="left:40%;animation-duration:11s;animation-delay:1s">🎈</div>
+  <div class="floating-emoji" style="left:60%;animation-duration:16s;animation-delay:5s">🍰</div>
+  <div class="floating-emoji" style="left:78%;animation-duration:13s;animation-delay:2s">⭐</div>
+  <div class="floating-emoji" style="left:90%;animation-duration:19s;animation-delay:7s">🐸</div>
+</div>
+
+<div class="wrapper">
+
+  <div class="header">
+    <h1>🍕 Pizza Math Kitchen!</h1>
+    <p>Learn Fractions, Addition & Subtraction — the yummy way!</p>
+  </div>
+
+  <!-- HUD -->
+  <div class="hud">
+    <div class="stars" id="starRow">
+      <span>⭐</span><span>⭐</span><span>⭐</span><span>⭐</span><span>⭐</span>
+    </div>
+    <span id="scoreBadge">Score: 0</span>
+    <span class="level-tag" id="levelTag">Level 1</span>
+  </div>
+
+  <!-- How to play -->
+  <div class="howto">
+    <b>🎮 How to Play:</b>
+    <ul>
+      <li>Pick a topic tab below to start a mini-game</li>
+      <li>Answer correctly to earn ⭐ stars and points!</li>
+      <li>Each tab has fun activities — try them all!</li>
+    </ul>
+  </div>
+
+  <!-- TABS -->
+  <div class="tab-nav">
+    <button class="tab-btn t-frac active" onclick="switchTab('fractions',this)">🍕 Pizza Fractions</button>
+    <button class="tab-btn t-add"         onclick="switchTab('addition',this)">🎈 Balloon Pop Addition</button>
+    <button class="tab-btn t-sub"         onclick="switchTab('subtraction',this)">🐸 Frog Jump Subtraction</button>
+  </div>
+
+  <!-- ══════ GAME 1: PIZZA FRACTIONS ══════ -->
+  <div class="game-card active" id="card-fractions">
+    <div class="game-card-header" style="background:linear-gradient(135deg,#fff3e0,#ffe0b2)">
+      <span class="game-icon">🍕</span>
+      <div>
+        <h2>Pizza Fractions</h2>
+        <p>Tap the correct fraction for each pizza!</p>
+      </div>
+    </div>
+    <div class="pizza-arena">
+      <div class="pizza-instruction" id="pizza-instr">
+        <b>Chef's Order:</b> Click the correct fraction that shows the <b>shaded</b> (eaten) slices!
+      </div>
+      <div class="pizza-wrap">
+        <div class="pizza-svg-wrap">
+          <svg id="pizzaSVG" width="200" height="200" viewBox="0 0 200 200"></svg>
+        </div>
+        <div class="pizza-panel">
+          <div class="pizza-fraction-display">
+            <p style="font-weight:700;color:#7b4f2e;margin-bottom:6px">Which fraction is eaten?</p>
+            <div class="frac-big" id="fracDisplay"><span id="fracNum">?</span><span class="fline"></span><span id="fracDen">?</span></div>
+          </div>
+          <div class="slice-options" id="sliceOptions"></div>
+          <button class="next-btn" id="nextPizzaBtn" onclick="nextPizza()" style="display:none">Next Pizza →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════ GAME 2: BALLOON POP ADDITION ══════ -->
+  <div class="game-card" id="card-addition">
+    <div class="game-card-header" style="background:linear-gradient(135deg,#e8f5e9,#c8e6c9)">
+      <span class="game-icon">🎈</span>
+      <div>
+        <h2>Balloon Pop!</h2>
+        <p>Pop the balloon with the correct answer!</p>
+      </div>
+    </div>
+    <div class="balloon-game">
+      <div class="add-question-box">
+        <div class="eq" id="addEq">? + ? = ?</div>
+        <p>Pop the balloon with the right answer! 🎯</p>
+      </div>
+      <div class="balloon-row" id="balloonRow"></div>
+      <button class="next-btn" id="nextAddBtn" onclick="nextAddition()" style="display:none">Next Question →</button>
+    </div>
+  </div>
+
+  <!-- ══════ GAME 3: FROG JUMP SUBTRACTION ══════ -->
+  <div class="game-card" id="card-subtraction">
+    <div class="game-card-header" style="background:linear-gradient(135deg,#e3f2fd,#bbdefb)">
+      <span class="game-icon">🐸</span>
+      <div>
+        <h2>Frog Jump!</h2>
+        <p>Help the frog jump to the right number!</p>
+      </div>
+    </div>
+    <div class="jump-game">
+      <div class="sub-question-box">
+        <div class="eq" id="subEq">? − ? = ?</div>
+        <p>Where will the frog land? 🐸 Tap the right answer!</p>
+      </div>
+      <div class="number-line-wrap">
+        <div class="number-line" id="numberLine"></div>
+      </div>
+      <div class="answer-grid" id="answerGrid"></div>
+      <button class="next-btn" id="nextSubBtn" onclick="nextSubtraction()" style="display:none">Next Question →</button>
+    </div>
+  </div>
+
+</div><!-- .wrapper -->
+
+<!-- Toast -->
+<div class="toast" id="toast">✅ Correct!</div>
+
+<!-- Celebration -->
+<div class="celebration" id="celebration">
+  <div class="celeb-card">
+    <div class="celeb-emoji" id="celebEmoji">🎉</div>
+    <h2 id="celebTitle">Amazing!</h2>
+    <div class="celeb-stars" id="celebStars">⭐⭐⭐</div>
+    <p id="celebMsg">You're a Math Superstar!</p>
+    <button class="next-btn" style="margin-top:20px" onclick="closeCelebration()">Keep Going! 🚀</button>
+  </div>
+</div>
+
+<script>
+// ── GLOBALS ──────────────────────────────────────────────
+let score = 0;
+let stars = 0;
+let correctStreak = 0;
+const COLORS = ['#e63946','#f4a261','#2a9d8f','#e9c46a','#457b9d','#a8dadc'];
+const TOPPINGS = ['🍄','🫑','🫒','🧅','🥓'];
+
+// ── UI UTILS ─────────────────────────────────────────────
+function showToast(msg, type='good') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + type;
+  setTimeout(() => t.className = 'toast', 2200);
+}
+
+function addScore(pts) {
+  score += pts;
+  document.getElementById('scoreBadge').textContent = 'Score: ' + score;
+  const lvl = Math.floor(score / 30) + 1;
+  document.getElementById('levelTag').textContent = 'Level ' + lvl;
+}
+
+function addStar() {
+  stars = Math.min(stars + 1, 5);
+  const starEls = document.querySelectorAll('#starRow span');
+  starEls.forEach((s,i) => s.classList.toggle('lit', i < stars));
+}
+
+function rand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+function shuffle(arr) { return arr.sort(() => Math.random() - 0.5); }
+
+// ── TAB SWITCHING ─────────────────────────────────────────
+function switchTab(id, btn) {
+  document.querySelectorAll('.game-card').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('card-' + id).classList.add('active');
+  btn.classList.add('active');
+  if (id === 'fractions')   initPizza();
+  if (id === 'addition')    initAddition();
+  if (id === 'subtraction') initSubtraction();
+}
+
+// ════════════════════════════════════════════════
+// 🍕  PIZZA FRACTIONS GAME
+// ════════════════════════════════════════════════
+let pizzaAnswered = false;
+const pizzaLevels = [
+  {slices:2, eaten:1}, {slices:3, eaten:1}, {slices:4, eaten:1},
+  {slices:4, eaten:2}, {slices:4, eaten:3}, {slices:6, eaten:2},
+  {slices:6, eaten:3}, {slices:6, eaten:4}, {slices:8, eaten:3},
+  {slices:8, eaten:5},
+];
+let pizzaIdx = 0;
+
+function initPizza() {
+  pizzaIdx = rand(0, pizzaLevels.length - 1);
+  pizzaAnswered = false;
+  drawPizza();
+}
+
+function drawPizza() {
+  const {slices, eaten} = pizzaLevels[pizzaIdx];
+  const svg = document.getElementById('pizzaSVG');
+  const cx = 100, cy = 100, r = 90;
+  svg.innerHTML = '';
+
+  // dough base
+  const base = document.createElementNS('http://www.w3.org/2000/svg','circle');
+  base.setAttribute('cx',cx); base.setAttribute('cy',cy); base.setAttribute('r',r);
+  base.setAttribute('fill','#f8edeb'); base.setAttribute('stroke','#e9c46a'); base.setAttribute('stroke-width','8');
+  svg.appendChild(base);
+
+  const angleStep = (2 * Math.PI) / slices;
+  const startAngle = -Math.PI / 2;
+
+  for (let i = 0; i < slices; i++) {
+    const a1 = startAngle + i * angleStep;
+    const a2 = a1 + angleStep;
+    const x1 = cx + r * Math.cos(a1), y1 = cy + r * Math.sin(a1);
+    const x2 = cx + r * Math.cos(a2), y2 = cy + r * Math.sin(a2);
+    const isEaten = i < eaten;
+
+    const path = document.createElementNS('http://www.w3.org/2000/svg','path');
+    const d = `M ${cx} ${cy} L ${x1} ${y1} A ${r} ${r} 0 0 1 ${x2} ${y2} Z`;
+    path.setAttribute('d', d);
+    path.setAttribute('fill', isEaten ? '#e63946' : '#f4a261');
+    path.setAttribute('stroke', '#fff');
+    path.setAttribute('stroke-width', '3');
+    svg.appendChild(path);
+
+    // topping on eaten slices
+    if (isEaten && r > 30) {
+      const midAngle = (a1 + a2) / 2;
+      const tx = cx + (r * 0.55) * Math.cos(midAngle);
+      const ty = cy + (r * 0.55) * Math.sin(midAngle);
+      const t = document.createElementNS('http://www.w3.org/2000/svg','text');
+      t.setAttribute('x', tx); t.setAttribute('y', ty + 5);
+      t.setAttribute('text-anchor','middle'); t.setAttribute('font-size','18');
+      t.textContent = TOPPINGS[i % TOPPINGS.length];
+      svg.appendChild(t);
+    }
+  }
+
+  // crust ring
+  const crust = document.createElementNS('http://www.w3.org/2000/svg','circle');
+  crust.setAttribute('cx',cx); crust.setAttribute('cy',cy); crust.setAttribute('r',r);
+  crust.setAttribute('fill','none'); crust.setAttribute('stroke','#c8762b'); crust.setAttribute('stroke-width','4');
+  svg.appendChild(crust);
+
+  // Update fraction display
+  document.getElementById('fracNum').textContent = eaten;
+  document.getElementById('fracDen').textContent = slices;
+
+  // Generate wrong options
+  const correct = eaten + '/' + slices;
+  const opts = new Set([correct]);
+  while (opts.size < 4) {
+    const wrongEaten = rand(1, slices - 1);
+    const wrongSlices = rand(2, 8);
+    if (wrongEaten !== eaten || wrongSlices !== slices) {
+      opts.add(wrongEaten + '/' + wrongSlices);
+    }
+  }
+  const shuffled = shuffle([...opts]);
+  const container = document.getElementById('sliceOptions');
+  container.innerHTML = '';
+  shuffled.forEach(opt => {
+    const [n, d] = opt.split('/');
+    const btn = document.createElement('button');
+    btn.className = 'slice-opt';
+    btn.innerHTML = `<span style="font-size:1.6rem">${n}</span><hr style="border:2px solid #c8762b;margin:3px 0"><span style="font-size:1.6rem">${d}</span>`;
+    btn.onclick = () => checkPizza(btn, opt, correct);
+    container.appendChild(btn);
+  });
+
+  document.getElementById('nextPizzaBtn').style.display = 'none';
+  pizzaAnswered = false;
+}
+
+function checkPizza(btn, selected, correct) {
+  if (pizzaAnswered) return;
+  pizzaAnswered = true;
+  const isCorrect = selected === correct;
+  btn.classList.add(isCorrect ? 'correct' : 'wrong');
+  document.querySelectorAll('.slice-opt').forEach(b => b.disabled = true);
+  if (isCorrect) {
+    showToast('🍕 Delicious! Correct fraction!', 'good');
+    addScore(10); addStar(); correctStreak++;
+    if (correctStreak % 3 === 0) celebrate();
+  } else {
+    showToast('❌ Oops! Try the next one!', 'bad');
+    correctStreak = 0;
+    // Show correct
+    document.querySelectorAll('.slice-opt').forEach(b => {
+      const v = b.querySelector('span').textContent + '/' + b.querySelectorAll('span')[1]?.textContent;
+      if (b.innerHTML.includes(correct.split('/')[0]) && !b.classList.contains('wrong')) {
+        // find correct button
+      }
+    });
+  }
+  document.getElementById('nextPizzaBtn').style.display = 'block';
+}
+
+function nextPizza() {
+  pizzaIdx = rand(0, pizzaLevels.length - 1);
+  pizzaAnswered = false;
+  drawPizza();
+}
+
+// ════════════════════════════════════════════════
+// 🎈  BALLOON POP ADDITION GAME
+// ════════════════════════════════════════════════
+const BALLOON_COLORS = [
+  ['#e63946','#c1121f'], ['#f4a261','#e76f51'], ['#2a9d8f','#1d7a6e'],
+  ['#e9c46a','#c9a227'], ['#457b9d','#1d3557'], ['#a8dadc','#74b3ce']
+];
+let addAnswered = false;
+let addCorrect = 0;
+
+function initAddition() {
+  addAnswered = false;
+  nextAddition();
+}
+
+function nextAddition() {
+  const maxNum = 20 + Math.floor(score / 20) * 10;
+  const a = rand(1, maxNum);
+  const b = rand(1, maxNum);
+  addCorrect = a + b;
+
+  document.getElementById('addEq').textContent = `${a} + ${b} = ?`;
+
+  // Generate balloons
+  const wrongs = new Set([addCorrect]);
+  while (wrongs.size < 5) {
+    wrongs.add(rand(Math.max(1,addCorrect-15), addCorrect+15));
+  }
+  const all = shuffle([...wrongs]);
+  const row = document.getElementById('balloonRow');
+  row.innerHTML = '';
+
+  all.forEach((val, idx) => {
+    const [fill, shadow] = BALLOON_COLORS[idx % BALLOON_COLORS.length];
+    const div = document.createElement('div');
+    div.className = 'balloon';
+    div.innerHTML = `
+      <svg viewBox="0 0 80 100" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="40" cy="38" rx="32" ry="36" fill="${fill}"/>
+        <ellipse cx="30" cy="24" rx="10" ry="8" fill="rgba(255,255,255,0.25)"/>
+        <path d="M40 74 Q36 80 40 86 Q44 80 40 74Z" fill="${shadow}"/>
+        <line x1="40" y1="86" x2="40" y2="100" stroke="#888" stroke-width="2"/>
+      </svg>
+      <span class="b-label">${val}</span>`;
+    div.onclick = () => checkBalloon(div, val);
+    row.appendChild(div);
+  });
+
+  document.getElementById('nextAddBtn').style.display = 'none';
+  addAnswered = false;
+}
+
+function checkBalloon(div, val) {
+  if (addAnswered) return;
+  addAnswered = true;
+  const isCorrect = val === addCorrect;
+  if (isCorrect) {
+    div.classList.add('popped');
+    showToast('🎈 POP! Correct answer!', 'good');
+    addScore(10); addStar(); correctStreak++;
+    if (correctStreak % 3 === 0) celebrate();
+  } else {
+    div.classList.add('wrong-shake');
+    setTimeout(() => div.classList.remove('wrong-shake'), 400);
+    showToast(`❌ Not quite! Answer was ${addCorrect}`, 'bad');
+    correctStreak = 0;
+    // Pop the correct one
+    document.querySelectorAll('.balloon').forEach(b => {
+      if (parseInt(b.querySelector('.b-label').textContent) === addCorrect) {
+        setTimeout(() => b.classList.add('popped'), 600);
+      }
+    });
+  }
+  document.getElementById('nextAddBtn').style.display = 'block';
+}
+
+// ════════════════════════════════════════════════
+// 🐸  FROG JUMP SUBTRACTION GAME
+// ════════════════════════════════════════════════
+let subCorrect = 0;
+let subAnswered = false;
+let frogPosition = 0;
+
+function initSubtraction() {
+  subAnswered = false;
+  buildNumberLine();
+  nextSubtraction();
+}
+
+function buildNumberLine() {
+  const nl = document.getElementById('numberLine');
+  nl.innerHTML = '';
+  const width = 540 - 40;
+  const maxVal = 20;
+
+  const bar = document.createElement('div');
+  bar.className = 'nl-bar';
+  nl.appendChild(bar);
+
+  for (let i = 0; i <= maxVal; i++) {
+    const pct = i / maxVal;
+    const tick = document.createElement('div');
+    tick.className = 'nl-tick';
+    tick.style.left = (20 + pct * width) + 'px';
+    tick.innerHTML = `<div class="tick-line"></div><div class="tick-num">${i}</div>`;
+    nl.appendChild(tick);
+  }
+
+  // Frog
+  const frog = document.createElement('div');
+  frog.id = 'nl-frog';
+  frog.className = 'nl-frog';
+  frog.textContent = '🐸';
+  frog.style.left = '20px';
+  nl.appendChild(frog);
+}
+
+function moveFrog(value, maxVal) {
+  const width = 540 - 40;
+  const pct = value / maxVal;
+  const frog = document.getElementById('nl-frog');
+  frog.style.left = (20 + pct * width) + 'px';
+}
+
+function nextSubtraction() {
+  const maxA = 20 + Math.floor(score / 30) * 5;
+  const a = rand(5, Math.min(maxA, 20));
+  const b = rand(1, a);
+  subCorrect = a - b;
+
+  document.getElementById('subEq').textContent = `${a} − ${b} = ?`;
+
+  const wrongs = new Set([subCorrect]);
+  while (wrongs.size < 6) {
+    wrongs.add(rand(0, a));
+  }
+  const all = shuffle([...wrongs]);
+
+  const grid = document.getElementById('answerGrid');
+  grid.innerHTML = '';
+  all.forEach(val => {
+    const btn = document.createElement('button');
+    btn.className = 'ans-btn';
+    btn.textContent = val;
+    btn.onclick = () => checkSub(btn, val, a);
+    grid.appendChild(btn);
+  });
+
+  moveFrog(a, 20);
+  document.getElementById('nextSubBtn').style.display = 'none';
+  subAnswered = false;
+}
+
+function checkSub(btn, val, startVal) {
+  if (subAnswered) return;
+  subAnswered = true;
+  const isCorrect = val === subCorrect;
+  btn.classList.add(isCorrect ? 'correct' : 'wrong');
+  document.querySelectorAll('.ans-btn').forEach(b => b.disabled = true);
+
+  if (isCorrect) {
+    moveFrog(subCorrect, 20);
+    showToast('🐸 Ribbit! Perfect jump!', 'good');
+    addScore(10); addStar(); correctStreak++;
+    if (correctStreak % 3 === 0) celebrate();
+  } else {
+    showToast(`❌ The frog should land on ${subCorrect}!`, 'bad');
+    correctStreak = 0;
+    setTimeout(() => moveFrog(subCorrect, 20), 600);
+    document.querySelectorAll('.ans-btn').forEach(b => {
+      if (parseInt(b.textContent) === subCorrect) b.classList.add('correct');
+    });
+  }
+  document.getElementById('nextSubBtn').style.display = 'block';
+}
+
+// ── CELEBRATION ───────────────────────────────
+function celebrate() {
+  const msgs = [
+    ['🏆','Incredible!','You\'re on fire! 🔥'],
+    ['🌟','Star Player!','3 in a row — unstoppable!'],
+    ['🎉','Woohoo!','Math genius alert! 🧠'],
+    ['🦸','Superhero!','Nothing can stop you! 💪'],
+  ];
+  const m = msgs[rand(0,msgs.length-1)];
+  document.getElementById('celebEmoji').textContent = m[0];
+  document.getElementById('celebTitle').textContent = m[1];
+  document.getElementById('celebMsg').textContent = m[2];
+  document.getElementById('celebStars').textContent = '⭐'.repeat(Math.min(stars,5));
+  document.getElementById('celebration').classList.add('show');
+
+  // Confetti
+  const emojis = ['🎊','✨','🌟','🎈','🍕','➕','🐸'];
+  for (let i = 0; i < 14; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti-emoji';
+    c.textContent = emojis[rand(0,emojis.length-1)];
+    c.style.left = rand(5,95) + '%';
+    c.style.animationDelay = (rand(0,8)/10) + 's';
+    c.style.fontSize = rand(18,32) + 'px';
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 2400);
+  }
+}
+
+function closeCelebration() {
+  document.getElementById('celebration').classList.remove('show');
+}
+
+// ── INIT ──────────────────────────────────────
+initPizza();
+</script>
+</body>
+</html>

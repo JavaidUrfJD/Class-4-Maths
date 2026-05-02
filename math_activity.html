@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Math Explorer Activity</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap');
+
+  :root {
+    --sky: #0ea5e9;
+    --sun: #f59e0b;
+    --grass: #22c55e;
+    --berry: #ec4899;
+    --grape: #8b5cf6;
+    --coral: #f97316;
+    --mint: #10b981;
+    --bg: #fef9ee;
+    --card: #ffffff;
+    --text: #1e293b;
+    --muted: #64748b;
+    --radius: 18px;
+    --shadow: 0 4px 24px rgba(0,0,0,0.10);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 0 0 60px 0;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, #0ea5e9 0%, #8b5cf6 100%);
+    color: white;
+    text-align: center;
+    padding: 36px 20px 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.07'%3E%3Cpolygon points='30 0 60 30 30 60 0 30'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    animation: bgMove 12s linear infinite;
+  }
+  @keyframes bgMove { from{background-position:0 0} to{background-position:60px 60px} }
+  header h1 {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(2rem, 5vw, 3rem);
+    letter-spacing: 1px;
+    position: relative;
+    text-shadow: 0 3px 10px rgba(0,0,0,0.2);
+  }
+  header p {
+    font-size: 1.05rem;
+    opacity: 0.9;
+    margin-top: 6px;
+    position: relative;
+  }
+
+  /* PROGRESS BAR */
+  .progress-wrap {
+    background: white;
+    padding: 14px 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .progress-label { font-weight: 700; font-size: 0.9rem; color: var(--muted); white-space: nowrap; }
+  .progress-bar-outer {
+    flex: 1;
+    height: 12px;
+    background: #e2e8f0;
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  .progress-bar-inner {
+    height: 100%;
+    background: linear-gradient(90deg, #0ea5e9, #8b5cf6);
+    border-radius: 99px;
+    transition: width 0.5s ease;
+    width: 0%;
+  }
+  .score-badge {
+    background: linear-gradient(135deg, #f59e0b, #f97316);
+    color: white;
+    font-weight: 800;
+    font-size: 0.95rem;
+    padding: 4px 14px;
+    border-radius: 99px;
+    white-space: nowrap;
+  }
+
+  /* SECTIONS */
+  .sections {
+    max-width: 820px;
+    margin: 30px auto 0;
+    padding: 0 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+
+  .section-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    animation: fadeUp 0.5s ease both;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(22px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .section-card:nth-child(2) { animation-delay: 0.1s; }
+  .section-card:nth-child(3) { animation-delay: 0.2s; }
+  .section-card:nth-child(4) { animation-delay: 0.3s; }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 22px;
+    color: white;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.35rem;
+    letter-spacing: 0.5px;
+  }
+  .section-header .icon { font-size: 1.8rem; }
+  .sec-shapes  .section-header { background: linear-gradient(90deg, #0ea5e9, #38bdf8); }
+  .sec-angles  .section-header { background: linear-gradient(90deg, #8b5cf6, #a78bfa); }
+  .sec-fractions .section-header { background: linear-gradient(90deg, #ec4899, #f472b6); }
+  .sec-arithmetic .section-header { background: linear-gradient(90deg, #22c55e, #4ade80); }
+
+  .section-body { padding: 22px; }
+
+  /* QUESTIONS */
+  .question-block {
+    margin-bottom: 22px;
+    padding-bottom: 22px;
+    border-bottom: 2px dashed #f1f5f9;
+  }
+  .question-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+  .q-text {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 14px;
+    line-height: 1.5;
+  }
+  .q-num {
+    display: inline-block;
+    background: #f1f5f9;
+    border-radius: 8px;
+    padding: 2px 10px;
+    font-size: 0.82rem;
+    font-weight: 800;
+    color: var(--muted);
+    margin-right: 8px;
+  }
+
+  /* MULTIPLE CHOICE */
+  .choices {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  @media (max-width: 480px) { .choices { grid-template-columns: 1fr; } }
+
+  .choice-btn {
+    background: #f8fafc;
+    border: 2.5px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 11px 16px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.97rem;
+    font-weight: 600;
+    color: var(--text);
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.18s ease;
+  }
+  .choice-btn:hover:not(:disabled) {
+    border-color: #94a3b8;
+    background: #f1f5f9;
+    transform: translateY(-1px);
+  }
+  .choice-btn.correct {
+    background: #dcfce7;
+    border-color: #22c55e;
+    color: #15803d;
+  }
+  .choice-btn.wrong {
+    background: #fee2e2;
+    border-color: #ef4444;
+    color: #dc2626;
+  }
+  .choice-btn:disabled { cursor: default; }
+
+  /* TRUE/FALSE */
+  .tf-choices { display: flex; gap: 12px; }
+  .tf-btn {
+    flex: 1;
+    padding: 12px;
+    border-radius: 12px;
+    border: 2.5px solid #e2e8f0;
+    background: #f8fafc;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.18s;
+  }
+  .tf-btn:hover:not(:disabled) { transform: translateY(-2px); }
+  .tf-btn.true-btn:hover:not(:disabled) { background: #d1fae5; border-color: #22c55e; }
+  .tf-btn.false-btn:hover:not(:disabled) { background: #fee2e2; border-color: #ef4444; }
+  .tf-btn.correct { background: #dcfce7; border-color: #22c55e; color: #15803d; }
+  .tf-btn.wrong   { background: #fee2e2; border-color: #ef4444; color: #dc2626; }
+
+  /* FILL IN THE BLANK */
+  .fill-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .fill-input {
+    border: 2.5px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 9px 14px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    width: 100px;
+    text-align: center;
+    transition: border-color 0.2s;
+    outline: none;
+  }
+  .fill-input:focus { border-color: #94a3b8; }
+  .fill-input.correct { border-color: #22c55e; background: #dcfce7; color: #15803d; }
+  .fill-input.wrong   { border-color: #ef4444; background: #fee2e2; color: #dc2626; }
+  .check-btn {
+    background: #0ea5e9;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 9px 18px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.18s, transform 0.18s;
+  }
+  .check-btn:hover:not(:disabled) { background: #0284c7; transform: translateY(-1px); }
+  .check-btn:disabled { background: #94a3b8; cursor: default; }
+
+  /* FEEDBACK */
+  .feedback {
+    margin-top: 10px;
+    font-size: 0.93rem;
+    font-weight: 700;
+    padding: 8px 14px;
+    border-radius: 10px;
+    display: none;
+  }
+  .feedback.show { display: block; }
+  .feedback.ok  { background: #dcfce7; color: #15803d; }
+  .feedback.err { background: #fee2e2; color: #dc2626; }
+
+  /* SHAPE VISUAL */
+  .shape-visual {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+  .shape-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+  .shape-item span { font-size: 0.82rem; font-weight: 700; color: var(--muted); }
+
+  /* FRACTION VISUAL */
+  .fraction-display {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 1.4rem;
+    font-weight: 800;
+    line-height: 1;
+    gap: 2px;
+    margin: 0 6px;
+  }
+  .fraction-display .fline {
+    width: 100%;
+    height: 2.5px;
+    background: currentColor;
+    border-radius: 2px;
+  }
+
+  /* RESULT PANEL */
+  .result-panel {
+    display: none;
+    max-width: 820px;
+    margin: 30px auto 0;
+    padding: 0 16px;
+  }
+  .result-panel.show { display: block; }
+  .result-card {
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 36px;
+    text-align: center;
+    animation: pop 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  @keyframes pop {
+    from { transform: scale(0.85); opacity: 0; }
+    to   { transform: scale(1);    opacity: 1; }
+  }
+  .result-emoji { font-size: 4rem; margin-bottom: 12px; }
+  .result-card h2 { font-family: 'Fredoka One', cursive; font-size: 2rem; margin-bottom: 8px; }
+  .result-score {
+    font-size: 3rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, #0ea5e9, #8b5cf6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 12px 0;
+  }
+  .result-card p { color: var(--muted); font-size: 1.05rem; }
+  .retry-btn {
+    margin-top: 24px;
+    background: linear-gradient(135deg, #0ea5e9, #8b5cf6);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    padding: 14px 36px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: transform 0.18s, box-shadow 0.18s;
+    box-shadow: 0 4px 18px rgba(14,165,233,0.35);
+  }
+  .retry-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 22px rgba(14,165,233,0.45); }
+
+  .submit-wrap {
+    max-width: 820px;
+    margin: 26px auto 0;
+    padding: 0 16px;
+    text-align: center;
+  }
+  .submit-btn {
+    background: linear-gradient(135deg, #22c55e, #0ea5e9);
+    color: white;
+    border: none;
+    border-radius: 16px;
+    padding: 16px 56px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.35rem;
+    cursor: pointer;
+    transition: transform 0.18s, box-shadow 0.18s;
+    box-shadow: 0 5px 20px rgba(34,197,94,0.35);
+  }
+  .submit-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(34,197,94,0.4); }
+
+  /* ANGLE SVG */
+  .angle-svg { display: block; margin: 0 auto 10px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🌟 Math Explorer Activity</h1>
+  <p>Shapes · Reflex Angles · Fractions · Addition & Subtraction</p>
+</header>
+
+<div class="progress-wrap">
+  <span class="progress-label">Progress</span>
+  <div class="progress-bar-outer"><div class="progress-bar-inner" id="progressBar"></div></div>
+  <div class="score-badge">⭐ <span id="scoreDisplay">0</span> pts</div>
+</div>
+
+<div class="sections" id="mainContent">
+
+  <!-- ══════════ SECTION 1: SHAPES ══════════ -->
+  <div class="section-card sec-shapes">
+    <div class="section-header"><span class="icon">🔷</span> Properties of Shapes</div>
+    <div class="section-body">
+
+      <!-- Q1 MCQ -->
+      <div class="question-block" id="q1">
+        <div class="q-text"><span class="q-num">Q1</span> How many sides does a hexagon have?</div>
+        <div class="choices">
+          <button class="choice-btn" onclick="mcq('q1',this,false)">4</button>
+          <button class="choice-btn" onclick="mcq('q1',this,false)">5</button>
+          <button class="choice-btn" onclick="mcq('q1',this,true)">6</button>
+          <button class="choice-btn" onclick="mcq('q1',this,false)">8</button>
+        </div>
+        <div class="feedback" id="q1-fb"></div>
+      </div>
+
+      <!-- Q2 T/F -->
+      <div class="question-block" id="q2">
+        <div class="q-text"><span class="q-num">Q2</span> True or False: A square has all four sides equal AND all angles equal to 90°.</div>
+        <div class="tf-choices">
+          <button class="tf-btn true-btn"  onclick="tf('q2',this,true)">✅ True</button>
+          <button class="tf-btn false-btn" onclick="tf('q2',this,false)">❌ False</button>
+        </div>
+        <div class="feedback" id="q2-fb"></div>
+      </div>
+
+      <!-- Q3 MCQ with visual -->
+      <div class="question-block" id="q3">
+        <div class="q-text"><span class="q-num">Q3</span> Which shape has exactly 3 sides and 3 angles?</div>
+        <div class="shape-visual">
+          <div class="shape-item">
+            <svg width="60" height="60"><polygon points="30,5 55,55 5,55" fill="#bfdbfe" stroke="#3b82f6" stroke-width="2.5"/></svg>
+            <span>Triangle</span>
+          </div>
+          <div class="shape-item">
+            <svg width="60" height="60"><rect x="8" y="8" width="44" height="44" fill="#fde68a" stroke="#f59e0b" stroke-width="2.5"/></svg>
+            <span>Square</span>
+          </div>
+          <div class="shape-item">
+            <svg width="60" height="60"><ellipse cx="30" cy="30" rx="26" ry="18" fill="#d9f99d" stroke="#65a30d" stroke-width="2.5"/></svg>
+            <span>Ellipse</span>
+          </div>
+          <div class="shape-item">
+            <svg width="60" height="60"><polygon points="30,5 55,22 46,52 14,52 5,22" fill="#fecdd3" stroke="#f43f5e" stroke-width="2.5"/></svg>
+            <span>Pentagon</span>
+          </div>
+        </div>
+        <div class="choices">
+          <button class="choice-btn" onclick="mcq('q3',this,true)">Triangle</button>
+          <button class="choice-btn" onclick="mcq('q3',this,false)">Square</button>
+          <button class="choice-btn" onclick="mcq('q3',this,false)">Ellipse</button>
+          <button class="choice-btn" onclick="mcq('q3',this,false)">Pentagon</button>
+        </div>
+        <div class="feedback" id="q3-fb"></div>
+      </div>
+
+      <!-- Q4 Fill -->
+      <div class="question-block" id="q4">
+        <div class="q-text"><span class="q-num">Q4</span> A rectangle has <b>___</b> pairs of parallel sides.</div>
+        <div class="fill-row">
+          <input class="fill-input" id="q4-in" type="number" min="0" max="10" placeholder="?">
+          <button class="check-btn" id="q4-btn" onclick="fillCheck('q4','2')">Check</button>
+        </div>
+        <div class="feedback" id="q4-fb"></div>
+      </div>
+
+      <!-- Q5 MCQ -->
+      <div class="question-block" id="q5">
+        <div class="q-text"><span class="q-num">Q5</span> Which of the following is NOT a polygon?</div>
+        <div class="choices">
+          <button class="choice-btn" onclick="mcq('q5',this,false)">Triangle</button>
+          <button class="choice-btn" onclick="mcq('q5',this,false)">Pentagon</button>
+          <button class="choice-btn" onclick="mcq('q5',this,true)">Circle</button>
+          <button class="choice-btn" onclick="mcq('q5',this,false)">Hexagon</button>
+        </div>
+        <div class="feedback" id="q5-fb"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════ SECTION 2: REFLEX ANGLES ══════════ -->
+  <div class="section-card sec-angles">
+    <div class="section-header"><span class="icon">📐</span> Reflex Angles</div>
+    <div class="section-body">
+
+      <!-- Q6 MCQ -->
+      <div class="question-block" id="q6">
+        <div class="q-text"><span class="q-num">Q6</span> A reflex angle measures between which two values?</div>
+        <div class="choices">
+          <button class="choice-btn" onclick="mcq('q6',this,false)">0° and 90°</button>
+          <button class="choice-btn" onclick="mcq('q6',this,false)">90° and 180°</button>
+          <button class="choice-btn" onclick="mcq('q6',this,true)">180° and 360°</button>
+          <button class="choice-btn" onclick="mcq('q6',this,false)">360° and 720°</button>
+        </div>
+        <div class="feedback" id="q6-fb"></div>
+      </div>
+
+      <!-- Q7 T/F with SVG angle diagram -->
+      <div class="question-block" id="q7">
+        <div class="q-text"><span class="q-num">Q7</span> Look at the angle below. Is it a reflex angle?</div>
+        <svg class="angle-svg" width="180" height="130" viewBox="0 0 180 130">
+          <!-- Reflex angle: 210 degrees -->
+          <defs>
+            <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="4" refY="3" orient="auto">
+              <polygon points="0 0, 8 3, 0 6" fill="#8b5cf6"/>
+            </marker>
+          </defs>
+          <!-- Arc for reflex angle (210°) -->
+          <path d="M 90 90 L 160 90" stroke="#8b5cf6" stroke-width="2.5" fill="none"/>
+          <path d="M 90 90 L 53 37" stroke="#8b5cf6" stroke-width="2.5" fill="none"/>
+          <!-- Reflex arc -->
+          <path d="M 155 90 A 65 65 0 1 0 56 43" stroke="#a78bfa" stroke-width="2.5" fill="none" stroke-dasharray="6 3" marker-end="url(#arrowhead)"/>
+          <text x="120" y="75" font-size="13" fill="#7c3aed" font-family="Nunito" font-weight="700">210°</text>
+          <!-- vertex dot -->
+          <circle cx="90" cy="90" r="4" fill="#8b5cf6"/>
+        </svg>
+        <div class="tf-choices">
+          <button class="tf-btn true-btn"  onclick="tf('q7',this,true)">✅ Yes, reflex</button>
+          <button class="tf-btn false-btn" onclick="tf('q7',this,false)">❌ No, not reflex</button>
+        </div>
+        <div class="feedback" id="q7-fb"></div>
+      </div>
+
+      <!-- Q8 Fill -->
+      <div class="question-block" id="q8">
+        <div class="q-text"><span class="q-num">Q8</span> If an angle is 130°, what is its reflex angle? (Hint: 360° − 130°)</div>
+        <div class="fill-row">
+          <input class="fill-input" id="q8-in" type="number" placeholder="°">
+          <button class="check-btn" id="q8-btn" onclick="fillCheck('q8','230')">Check</button>
+        </div>
+        <div class="feedback" id="q8-fb"></div>
+      </div>
+
+      <!-- Q9 MCQ -->
+      <div class="question-block" id="q9">
+        <div class="q-text"><span class="q-num">Q9</span> Which of these is a reflex angle?</div>
+        <div class="choices">
+          <button class="choice-btn" onclick="mcq('q9',this,false)">45°</button>
+          <button class="choice-btn" onclick="mcq('q9',this,false)">90°</button>
+          <button class="choice-btn" onclick="mcq('q9',this,false)">175°</button>
+          <button class="choice-btn" onclick="mcq('q9',this,true)">270°</button>
+        </div>
+        <div class="feedback" id="q9-fb"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════ SECTION 3: FRACTIONS ══════════ -->
+  <div class="section-card sec-fractions">
+    <div class="section-header"><span class="icon">🍕</span> Fractions</div>
+    <div class="section-body">
+
+      <!-- Q10 MCQ with fraction visual -->
+      <div class="question-block" id="q10">
+        <div class="q-text"><span class="q-num">Q10</span> Which fraction is equivalent to <span style="font-weight:800">½</span>?</div>
+        <div class="choices">
+          <button class="choice-btn" onclick="mcq('q10',this,false)">1/3</button>
+          <button class="choice-btn" onclick="mcq('q10',this,true)">4/8</button>
+          <button class="choice-btn" onclick="mcq('q10',this,false)">3/7</button>
+          <button class="choice-btn" onclick="mcq('q10',this,false)">2/5</button>
+        </div>
+        <div class="feedback" id="q10-fb"></div>
+      </div>
+
+      <!-- Q11 T/F -->
+      <div class="question-block" id="q11">
+        <div class="q-text"><span class="q-num">Q11</span> True or False: 
+          <span class="fraction-display"><span>3</span><span class="fline"></span><span>4</span></span>
+          is greater than
+          <span class="fraction-display"><span>2</span><span class="fline"></span><span>3</span></span>
+        </div>
+        <div class="tf-choices">
+          <button class="tf-btn true-btn"  onclick="tf('q11',this,true)">✅ True</button>
+          <button class="tf-btn false-btn" onclick="tf('q11',this,false)">❌ False</button>
+        </div>
+        <div class="feedback" id="q11-fb"></div>
+      </div>
+
+      <!-- Q12 Fill -->
+      <div class="question-block" id="q12">
+        <div class="q-text"><span class="q-num">Q12</span> 
+          What is 
+          <span class="fraction-display"><span>1</span><span class="fline"></span><span>4</span></span>
+          + 
+          <span class="fraction-display"><span>2</span><span class="fline"></span><span>4</span></span>
+          = ?&nbsp; Write as a fraction (e.g. 3/4)
+        </div>
+        <div class="fill-row">
+          <input class="fill-input" id="q12-in" type="text" placeholder="?/?" style="width:90px">
+          <button class="check-btn" id="q12-btn" onclick="fillCheck('q12','3/4')">Check</button>
+        </div>
+        <div class="feedback" id="q12-fb"></div>
+      </div>
+
+      <!-- Q13 MCQ -->
+      <div class="question-block" id="q13">
+        <div class="q-text"><span class="q-num">Q13</span> A pizza is cut into 8 equal slices. You eat 3 slices. What fraction is left?</div>
+        <div class="choices">
+          <button class="choice-btn" onclick="mcq('q13',this,false)">3/8</button>
+          <button class="choice-btn" onclick="mcq('q13',this,true)">5/8</button>
+          <button class="choice-btn" onclick="mcq('q13',this,false)">1/2</button>
+          <button class="choice-btn" onclick="mcq('q13',this,false)">2/3</button>
+        </div>
+        <div class="feedback" id="q13-fb"></div>
+      </div>
+
+      <!-- Q14 T/F -->
+      <div class="question-block" id="q14">
+        <div class="q-text"><span class="q-num">Q14</span> True or False: 
+          <span class="fraction-display"><span>6</span><span class="fline"></span><span>8</span></span>
+          simplifies to 
+          <span class="fraction-display"><span>3</span><span class="fline"></span><span>4</span></span>
+        </div>
+        <div class="tf-choices">
+          <button class="tf-btn true-btn"  onclick="tf('q14',this,true)">✅ True</button>
+          <button class="tf-btn false-btn" onclick="tf('q14',this,false)">❌ False</button>
+        </div>
+        <div class="feedback" id="q14-fb"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════ SECTION 4: ADDITION & SUBTRACTION ══════════ -->
+  <div class="section-card sec-arithmetic">
+    <div class="section-header"><span class="icon">➕</span> Addition &amp; Subtraction</div>
+    <div class="section-body">
+
+      <!-- Q15 Fill -->
+      <div class="question-block" id="q15">
+        <div class="q-text"><span class="q-num">Q15</span> 347 + 258 = ?</div>
+        <div class="fill-row">
+          <input class="fill-input" id="q15-in" type="number" placeholder="?">
+          <button class="check-btn" id="q15-btn" onclick="fillCheck('q15','605')">Check</button>
+        </div>
+        <div class="feedback" id="q15-fb"></div>
+      </div>
+
+      <!-- Q16 Fill -->
+      <div class="question-block" id="q16">
+        <div class="q-text"><span class="q-num">Q16</span> 800 − 364 = ?</div>
+        <div class="fill-row">
+          <input class="fill-input" id="q16-in" type="number" placeholder="?">
+          <button class="check-btn" id="q16-btn" onclick="fillCheck('q16','436')">Check</button>
+        </div>
+        <div class="feedback" id="q16-fb"></div>
+      </div>
+
+      <!-- Q17 MCQ word problem -->
+      <div class="question-block" id="q17">
+        <div class="q-text"><span class="q-num">Q17</span> Sarah has 456 stickers. She gives 178 to her friend and gets 93 more from her mom. How many does she have now?</div>
+        <div class="choices">
+          <button class="choice-btn" onclick="mcq('q17',this,false)">361</button>
+          <button class="choice-btn" onclick="mcq('q17',this,true)">371</button>
+          <button class="choice-btn" onclick="mcq('q17',this,false)">381</button>
+          <button class="choice-btn" onclick="mcq('q17',this,false)">391</button>
+        </div>
+        <div class="feedback" id="q17-fb"></div>
+      </div>
+
+      <!-- Q18 T/F -->
+      <div class="question-block" id="q18">
+        <div class="q-text"><span class="q-num">Q18</span> True or False: 1,000 − 999 = 1</div>
+        <div class="tf-choices">
+          <button class="tf-btn true-btn"  onclick="tf('q18',this,true)">✅ True</button>
+          <button class="tf-btn false-btn" onclick="tf('q18',this,false)">❌ False</button>
+        </div>
+        <div class="feedback" id="q18-fb"></div>
+      </div>
+
+      <!-- Q19 Fill -->
+      <div class="question-block" id="q19">
+        <div class="q-text"><span class="q-num">Q19</span> What number must be added to 685 to get 1,000?</div>
+        <div class="fill-row">
+          <input class="fill-input" id="q19-in" type="number" placeholder="?">
+          <button class="check-btn" id="q19-btn" onclick="fillCheck('q19','315')">Check</button>
+        </div>
+        <div class="feedback" id="q19-fb"></div>
+      </div>
+
+      <!-- Q20 MCQ -->
+      <div class="question-block" id="q20">
+        <div class="q-text"><span class="q-num">Q20</span> A school library had 1,240 books. 375 books were borrowed and 112 new books were added. How many books are there now?</div>
+        <div class="choices">
+          <button class="choice-btn" onclick="mcq('q20',this,false)">965</button>
+          <button class="choice-btn" onclick="mcq('q20',this,false)">975</button>
+          <button class="choice-btn" onclick="mcq('q20',this,true)">977</button>
+          <button class="choice-btn" onclick="mcq('q20',this,false)">987</button>
+        </div>
+        <div class="feedback" id="q20-fb"></div>
+      </div>
+
+    </div>
+  </div>
+
+</div><!-- end .sections -->
+
+<div class="submit-wrap">
+  <button class="submit-btn" onclick="submitActivity()">🎯 Submit Activity</button>
+</div>
+
+<div class="result-panel" id="resultPanel">
+  <div class="result-card">
+    <div class="result-emoji" id="resultEmoji">🌟</div>
+    <h2 id="resultTitle">Fantastic!</h2>
+    <div class="result-score" id="resultScore">18 / 20</div>
+    <p id="resultMsg">Keep practising — you're doing great!</p>
+    <button class="retry-btn" onclick="retryActivity()">🔄 Try Again</button>
+  </div>
+</div>
+
+<script>
+  // ── State ──────────────────────────────────────────────
+  const TOTAL = 20;
+  const answered = {};   // qId → true/false
+  const points   = {};   // qId → 1 or 0
+
+  // ── Helpers ───────────────────────────────────────────
+  function updateProgress() {
+    const done = Object.keys(answered).length;
+    const score = Object.values(points).reduce((a,b)=>a+b,0);
+    document.getElementById('progressBar').style.width = (done/TOTAL*100)+'%';
+    document.getElementById('scoreDisplay').textContent = score;
+  }
+
+  function showFeedback(qId, correct, wrongMsg) {
+    const fb = document.getElementById(qId+'-fb');
+    fb.className = 'feedback show ' + (correct ? 'ok' : 'err');
+    fb.textContent = correct ? '✅ Correct! Well done!' : ('❌ Not quite. ' + (wrongMsg||'Try again next time!'));
+  }
+
+  // ── MCQ ───────────────────────────────────────────────
+  function mcq(qId, btn, isCorrect) {
+    if (answered[qId]) return;
+    answered[qId] = true;
+    points[qId] = isCorrect ? 1 : 0;
+    const parent = btn.closest('.question-block');
+    parent.querySelectorAll('.choice-btn').forEach(b => {
+      b.disabled = true;
+      if (b === btn) b.classList.add(isCorrect ? 'correct' : 'wrong');
+    });
+    // Reveal correct if wrong
+    if (!isCorrect) {
+      parent.querySelectorAll('.choice-btn').forEach(b => {
+        if (b.onclick.toString().includes('true')) b.classList.add('correct');
+      });
+    }
+    showFeedback(qId, isCorrect);
+    updateProgress();
+  }
+
+  // ── T/F ───────────────────────────────────────────────
+  function tf(qId, btn, selected) {
+    if (answered[qId]) return;
+    const correctMap = {q2:true, q7:true, q11:true, q14:true, q18:true};
+    const isCorrect = (selected === correctMap[qId]);
+    answered[qId] = true;
+    points[qId] = isCorrect ? 1 : 0;
+    const parent = btn.closest('.question-block');
+    parent.querySelectorAll('.tf-btn').forEach(b => b.disabled = true);
+    btn.classList.add(isCorrect ? 'correct' : 'wrong');
+    if (!isCorrect) {
+      parent.querySelectorAll('.tf-btn').forEach(b => {
+        if ((b.classList.contains('true-btn') && correctMap[qId]) ||
+            (b.classList.contains('false-btn') && !correctMap[qId])) {
+          b.classList.add('correct');
+        }
+      });
+    }
+    const msg = {
+      q2:'A square has 4 equal sides and all 90° angles.',
+      q7:'210° is between 180° and 360°, so it is a reflex angle.',
+      q11:'3/4 = 0.75 and 2/3 ≈ 0.667, so 3/4 is greater.',
+      q14:'6÷2=3 and 8÷2=4, so 6/8 = 3/4.',
+      q18:'1000 − 999 = 1.'
+    };
+    showFeedback(qId, isCorrect, msg[qId]);
+    updateProgress();
+  }
+
+  // ── Fill in blank ─────────────────────────────────────
+  function fillCheck(qId, correctAnswer) {
+    if (answered[qId]) return;
+    const inp = document.getElementById(qId+'-in');
+    const val = inp.value.trim().toLowerCase().replace(/\s/g,'');
+    const isCorrect = (val === correctAnswer.toLowerCase().replace(/\s/g,''));
+    answered[qId] = true;
+    points[qId] = isCorrect ? 1 : 0;
+    inp.classList.add(isCorrect ? 'correct' : 'wrong');
+    inp.disabled = true;
+    document.getElementById(qId+'-btn').disabled = true;
+    const wrongMsgs = {
+      q4:'A rectangle has 2 pairs of parallel sides.',
+      q8:'360° − 130° = 230°.',
+      q12:'1/4 + 2/4 = 3/4.',
+      q15:'347 + 258 = 605.',
+      q16:'800 − 364 = 436.',
+      q19:'1,000 − 685 = 315.'
+    };
+    showFeedback(qId, isCorrect, wrongMsgs[qId] || ('The correct answer is ' + correctAnswer + '.'));
+    updateProgress();
+  }
+
+  // ── Submit ─────────────────────────────────────────────
+  function submitActivity() {
+    // Auto-mark unanswered as 0
+    for (let i=1; i<=TOTAL; i++) {
+      if (!answered['q'+i]) { answered['q'+i]=false; points['q'+i]=0; }
+    }
+    updateProgress();
+    const score = Object.values(points).reduce((a,b)=>a+b,0);
+    const pct = score / TOTAL;
+    let emoji, title, msg;
+    if (pct === 1)        { emoji='🏆'; title='Perfect Score!';      msg='Absolutely brilliant — full marks!'; }
+    else if (pct >= 0.8)  { emoji='🌟'; title='Excellent!';          msg='Outstanding work — almost perfect!'; }
+    else if (pct >= 0.6)  { emoji='😊'; title='Good Job!';           msg='Well done! Keep practising to reach the top.'; }
+    else if (pct >= 0.4)  { emoji='💪'; title='Keep Going!';         msg='You\'re getting there — review and try again!'; }
+    else                  { emoji='📚'; title='Keep Practising!';    msg='Don\'t give up — every expert was once a beginner!'; }
+
+    document.getElementById('resultEmoji').textContent = emoji;
+    document.getElementById('resultTitle').textContent = title;
+    document.getElementById('resultScore').textContent = score + ' / ' + TOTAL;
+    document.getElementById('resultMsg').textContent = msg;
+    const rp = document.getElementById('resultPanel');
+    rp.classList.add('show');
+    rp.scrollIntoView({behavior:'smooth'});
+    document.querySelector('.submit-btn').disabled = true;
+  }
+
+  // ── Retry ──────────────────────────────────────────────
+  function retryActivity() { location.reload(); }
+</script>
+</body>
+</html>

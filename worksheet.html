@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Grade 4 Maths Worksheet 🌟</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap');
+
+:root {
+  --pink:   #ff6b9d;
+  --blue:   #4fc3f7;
+  --green:  #66bb6a;
+  --orange: #ffa726;
+  --purple: #ab47bc;
+  --yellow: #ffee58;
+  --red:    #ef5350;
+  --dark:   #1a1a2e;
+  --white:  #ffffff;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+
+body {
+  font-family:'Nunito',sans-serif;
+  background: linear-gradient(135deg,#667eea 0%,#764ba2 50%,#f953c6 100%);
+  min-height:100vh;
+  padding:16px;
+}
+
+/* ── STARS BG ── */
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background-image:
+    radial-gradient(circle,rgba(255,255,255,0.15) 1px,transparent 1px),
+    radial-gradient(circle,rgba(255,255,255,0.08) 1px,transparent 1px);
+  background-size:40px 40px,70px 70px;
+  background-position:0 0,20px 20px;
+  pointer-events:none;z-index:0;
+  animation:starDrift 20s linear infinite;
+}
+@keyframes starDrift{from{background-position:0 0,20px 20px}to{background-position:40px 40px,60px 60px}}
+
+.container{
+  position:relative;z-index:1;
+  max-width:860px;margin:0 auto;
+  display:flex;flex-direction:column;gap:20px;
+}
+
+/* ── HEADER ── */
+.header{
+  background:linear-gradient(135deg,#ff6b9d,#ffa726);
+  border-radius:28px;
+  padding:30px 24px 24px;
+  text-align:center;
+  box-shadow:0 8px 32px rgba(255,107,157,0.4),0 0 0 4px rgba(255,255,255,0.2);
+  animation:dropBounce 0.7s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+@keyframes dropBounce{from{transform:translateY(-60px);opacity:0}to{transform:translateY(0);opacity:1}}
+.header h1{
+  font-family:'Fredoka One',cursive;
+  font-size:clamp(1.8rem,5vw,2.8rem);
+  color:white;
+  text-shadow:0 3px 10px rgba(0,0,0,0.2),3px 3px 0 rgba(0,0,0,0.1);
+  line-height:1.1;
+}
+.header p{color:rgba(255,255,255,0.9);font-size:1rem;font-weight:700;margin-top:8px;}
+.header .badges{display:flex;justify-content:center;gap:10px;margin-top:14px;flex-wrap:wrap;}
+.badge{
+  background:rgba(255,255,255,0.25);
+  border:2px solid rgba(255,255,255,0.5);
+  color:white;font-weight:800;font-size:0.82rem;
+  padding:5px 14px;border-radius:99px;
+  backdrop-filter:blur(4px);
+}
+
+/* ── SCORE HUD ── */
+.hud{
+  background:var(--dark);
+  border-radius:20px;
+  padding:14px 22px;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:10px;
+  box-shadow:0 6px 24px rgba(0,0,0,0.3);
+  animation:dropBounce 0.7s 0.1s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+.hud-score{
+  font-family:'Fredoka One',cursive;
+  font-size:1.5rem;color:var(--yellow);
+  text-shadow:0 0 12px rgba(255,238,88,0.5);
+}
+.hud-label{color:rgba(255,255,255,0.6);font-size:0.85rem;font-weight:700;}
+.hud-progress{flex:1;min-width:120px;height:12px;background:rgba(255,255,255,0.1);border-radius:99px;overflow:hidden;}
+.hud-bar{height:100%;background:linear-gradient(90deg,#66bb6a,#4fc3f7);border-radius:99px;transition:width 0.6s ease;width:0%;}
+.hud-reload{
+  background:linear-gradient(135deg,#ff6b9d,#ffa726);
+  border:none;border-radius:12px;
+  color:white;font-family:'Nunito',sans-serif;font-weight:800;font-size:0.9rem;
+  padding:8px 18px;cursor:pointer;
+  transition:transform 0.18s,box-shadow 0.18s;
+  box-shadow:0 3px 0 rgba(0,0,0,0.2);
+}
+.hud-reload:hover{transform:translateY(-2px);box-shadow:0 5px 0 rgba(0,0,0,0.2);}
+
+/* ── SECTION CARD ── */
+.section-card{
+  border-radius:24px;
+  overflow:hidden;
+  box-shadow:0 8px 30px rgba(0,0,0,0.2);
+  animation:slideUp 0.5s ease both;
+}
+.section-card:nth-child(2){animation-delay:0.05s}
+.section-card:nth-child(3){animation-delay:0.10s}
+.section-card:nth-child(4){animation-delay:0.15s}
+.section-card:nth-child(5){animation-delay:0.20s}
+@keyframes slideUp{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
+
+.section-head{
+  padding:18px 22px;
+  display:flex;align-items:center;gap:14px;
+  color:white;
+}
+.section-head .ico{font-size:2rem;}
+.section-head h2{font-family:'Fredoka One',cursive;font-size:1.45rem;text-shadow:0 2px 6px rgba(0,0,0,0.2);}
+.section-head p{font-size:0.85rem;opacity:0.85;font-weight:600;margin-top:2px;}
+
+.s1 .section-head{background:linear-gradient(135deg,#ff6b9d,#f953c6);}
+.s2 .section-head{background:linear-gradient(135deg,#4fc3f7,#0288d1);}
+.s3 .section-head{background:linear-gradient(135deg,#66bb6a,#2e7d32);}
+.s4 .section-head{background:linear-gradient(135deg,#ffa726,#e65100);}
+
+.section-body{background:white;padding:22px;}
+
+/* ── QUESTION BLOCK ── */
+.q-block{
+  margin-bottom:22px;
+  padding:18px;
+  border-radius:18px;
+  border:2.5px solid #f0f0f0;
+  background:#fafafa;
+  transition:border-color 0.3s,box-shadow 0.3s;
+}
+.q-block:last-child{margin-bottom:0;}
+.q-block.answered-ok {border-color:#66bb6a;background:#f1fdf2;box-shadow:0 0 0 3px rgba(102,187,106,0.15);}
+.q-block.answered-err{border-color:#ef5350;background:#fff5f5;box-shadow:0 0 0 3px rgba(239,83,80,0.15);}
+
+.q-num{
+  display:inline-block;
+  width:30px;height:30px;line-height:30px;
+  text-align:center;border-radius:50%;
+  font-weight:800;font-size:0.88rem;color:white;
+  margin-right:8px;flex-shrink:0;
+}
+.s1 .q-num{background:var(--pink);}
+.s2 .q-num{background:var(--blue);}
+.s3 .q-num{background:var(--green);}
+.s4 .q-num{background:var(--orange);}
+
+.q-text{
+  font-size:1rem;font-weight:700;color:#1a1a2e;
+  display:flex;align-items:flex-start;gap:0;
+  line-height:1.5;margin-bottom:14px;
+  flex-wrap:wrap;
+}
+
+/* MCQ */
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+@media(max-width:480px){.choices{grid-template-columns:1fr;}}
+.choice-btn{
+  background:white;
+  border:2.5px solid #e0e0e0;
+  border-radius:14px;
+  padding:12px 14px;
+  font-family:'Nunito',sans-serif;font-size:0.97rem;font-weight:700;
+  color:#1a1a2e;cursor:pointer;text-align:left;
+  transition:all 0.18s;
+}
+.choice-btn:hover:not(:disabled){background:#f3e5f5;border-color:#ab47bc;transform:translateY(-2px);}
+.choice-btn.ok {background:#e8f5e9;border-color:#66bb6a;color:#2e7d32;}
+.choice-btn.err{background:#ffebee;border-color:#ef5350;color:#c62828;}
+
+/* SHORT ANSWER */
+.answer-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+.ans-input{
+  border:2.5px solid #e0e0e0;border-radius:12px;
+  padding:10px 16px;
+  font-family:'Nunito',sans-serif;font-size:1rem;font-weight:700;
+  color:#1a1a2e;outline:none;
+  transition:border-color 0.2s;
+  flex:1;min-width:100px;max-width:220px;
+}
+.ans-input:focus{border-color:#ab47bc;}
+.ans-input.ok {border-color:#66bb6a;background:#e8f5e9;color:#2e7d32;}
+.ans-input.err{border-color:#ef5350;background:#ffebee;color:#c62828;}
+
+.check-btn{
+  border:none;border-radius:12px;
+  padding:10px 20px;
+  font-family:'Nunito',sans-serif;font-size:0.92rem;font-weight:800;
+  color:white;cursor:pointer;
+  transition:transform 0.18s,box-shadow 0.18s;
+  box-shadow:0 3px 0 rgba(0,0,0,0.18);
+  white-space:nowrap;
+}
+.check-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 5px 0 rgba(0,0,0,0.15);}
+.check-btn:disabled{opacity:0.5;cursor:default;transform:none;}
+.s1 .check-btn{background:linear-gradient(135deg,#ff6b9d,#f953c6);}
+.s2 .check-btn{background:linear-gradient(135deg,#4fc3f7,#0288d1);}
+.s3 .check-btn{background:linear-gradient(135deg,#66bb6a,#2e7d32);}
+.s4 .check-btn{background:linear-gradient(135deg,#ffa726,#e65100);}
+
+/* FEEDBACK */
+.feedback{
+  margin-top:10px;
+  padding:10px 14px;
+  border-radius:12px;
+  font-size:0.93rem;font-weight:700;
+  display:none;line-height:1.4;
+}
+.feedback.show{display:block;}
+.feedback.ok {background:#e8f5e9;color:#2e7d32;border-left:4px solid #66bb6a;}
+.feedback.err{background:#ffebee;color:#c62828;border-left:4px solid #ef5350;}
+
+/* HINT PILL */
+.hint-pill{
+  display:inline-block;
+  background:#fff3e0;color:#e65100;
+  border:1.5px dashed #ffa726;
+  border-radius:99px;padding:3px 12px;
+  font-size:0.8rem;font-weight:700;
+  margin-bottom:10px;
+}
+
+/* ── FINAL RESULT ── */
+.result-panel{
+  background:linear-gradient(135deg,#1a1a2e,#16213e);
+  border-radius:24px;
+  padding:36px 24px;
+  text-align:center;
+  box-shadow:0 8px 32px rgba(0,0,0,0.4);
+  display:none;
+}
+.result-panel.show{display:block;animation:popIn 0.5s cubic-bezier(0.34,1.56,0.64,1);}
+@keyframes popIn{from{transform:scale(0.8);opacity:0}to{transform:scale(1);opacity:1}}
+.result-panel .emoji{font-size:5rem;margin-bottom:12px;}
+.result-panel h2{font-family:'Fredoka One',cursive;font-size:2.2rem;color:var(--yellow);margin-bottom:8px;}
+.result-panel .big-score{font-family:'Fredoka One',cursive;font-size:3.5rem;
+  background:linear-gradient(135deg,#ff6b9d,#ffa726);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.result-panel p{color:rgba(255,255,255,0.75);font-size:1rem;font-weight:600;margin-top:8px;}
+.result-panel .breakdown{
+  display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:20px 0;
+}
+.breakdown-item{
+  background:rgba(255,255,255,0.08);
+  border:1.5px solid rgba(255,255,255,0.15);
+  border-radius:16px;padding:12px 20px;
+  color:white;font-weight:700;font-size:0.9rem;
+  min-width:120px;
+}
+.breakdown-item span{display:block;font-family:'Fredoka One',cursive;font-size:1.6rem;margin-top:4px;}
+.retry-btn{
+  background:linear-gradient(135deg,#ff6b9d,#ffa726);
+  border:none;border-radius:16px;
+  color:white;font-family:'Fredoka One',cursive;font-size:1.2rem;
+  padding:14px 40px;cursor:pointer;
+  box-shadow:0 5px 0 rgba(0,0,0,0.2);
+  transition:transform 0.18s,box-shadow 0.18s;
+  margin-top:10px;
+}
+.retry-btn:hover{transform:translateY(-3px);box-shadow:0 8px 0 rgba(0,0,0,0.2);}
+
+/* ── SUBMIT ALL ── */
+.submit-wrap{text-align:center;}
+.submit-all-btn{
+  background:linear-gradient(135deg,#66bb6a,#4fc3f7);
+  border:none;border-radius:20px;
+  color:white;font-family:'Fredoka One',cursive;font-size:1.4rem;
+  padding:18px 60px;cursor:pointer;
+  box-shadow:0 6px 0 rgba(0,0,0,0.15),0 0 30px rgba(102,187,106,0.3);
+  transition:transform 0.18s,box-shadow 0.18s;
+}
+.submit-all-btn:hover{transform:translateY(-4px);box-shadow:0 10px 0 rgba(0,0,0,0.12),0 0 40px rgba(102,187,106,0.4);}
+
+/* ── TOAST ── */
+.toast{
+  position:fixed;bottom:24px;left:50%;
+  transform:translateX(-50%) translateY(100px);
+  background:var(--dark);color:white;
+  font-family:'Fredoka One',cursive;font-size:1.1rem;
+  padding:13px 30px;border-radius:99px;
+  box-shadow:0 6px 24px rgba(0,0,0,0.3);
+  z-index:999;pointer-events:none;
+  transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  white-space:nowrap;
+}
+.toast.show{transform:translateX(-50%) translateY(0);}
+.toast.ok{background:#2e7d32;}
+.toast.err{background:#c62828;}
+
+/* ── CONFETTI ── */
+.confetti-piece{
+  position:fixed;font-size:1.8rem;
+  animation:confettiFall 1.8s ease-in forwards;
+  pointer-events:none;z-index:1000;
+}
+@keyframes confettiFall{
+  from{top:-5%;opacity:1;transform:rotate(0deg)}
+  to{top:105%;opacity:0;transform:rotate(720deg)}
+}
+
+/* ── MOBILE ── */
+@media(max-width:600px){
+  .section-body{padding:16px;}
+  .q-block{padding:14px;}
+  .choices{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- HEADER -->
+<div class="header">
+  <h1>🌟 Grade 4 Maths Worksheet</h1>
+  <p>Refresh the page for brand new questions every time!</p>
+  <div class="badges">
+    <span class="badge">📐 Factors & Multiplication</span>
+    <span class="badge">📏 Measurement</span>
+    <span class="badge">🔷 Perimeter & Area</span>
+    <span class="badge">📐 Angles</span>
+  </div>
+</div>
+
+<!-- HUD -->
+<div class="hud">
+  <div>
+    <div class="hud-label">YOUR SCORE</div>
+    <div class="hud-score">⭐ <span id="scoreNum">0</span> / <span id="totalNum">20</span></div>
+  </div>
+  <div class="hud-progress"><div class="hud-bar" id="hudBar"></div></div>
+  <button class="hud-reload" onclick="location.reload()">🔄 New Questions</button>
+</div>
+
+<!-- SECTION 1: FACTORS & MULTIPLICATION -->
+<div class="section-card s1" id="sec1"></div>
+
+<!-- SECTION 2: MEASUREMENT -->
+<div class="section-card s2" id="sec2"></div>
+
+<!-- SECTION 3: PERIMETER & AREA -->
+<div class="section-card s3" id="sec3"></div>
+
+<!-- SECTION 4: ANGLES -->
+<div class="section-card s4" id="sec4"></div>
+
+<!-- SUBMIT -->
+<div class="submit-wrap">
+  <button class="submit-all-btn" onclick="submitAll()">🎯 Submit All Answers</button>
+</div>
+
+<!-- RESULT -->
+<div class="result-panel" id="resultPanel">
+  <div class="emoji" id="resEmoji">🏆</div>
+  <h2 id="resTitle">Fantastic!</h2>
+  <div class="big-score" id="resScore">18 / 20</div>
+  <div class="breakdown" id="resBreakdown"></div>
+  <p id="resMsg">You're a Maths Superstar!</p>
+  <button class="retry-btn" onclick="location.reload()">🔄 Try Again with New Questions!</button>
+</div>
+
+</div><!-- .container -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════════════════════════════════════════
+//  UTILITIES
+// ══════════════════════════════════════════════
+let score = 0;
+let answered = {};
+const TOTAL = 20;
+
+function rand(a,b){return Math.floor(Math.random()*(b-a+1))+a;}
+function pick(arr){return arr[rand(0,arr.length-1)];}
+function shuffle(arr){return arr.slice().sort(()=>Math.random()-0.5);}
+
+function showToast(msg,type='ok'){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.className='toast show '+type;
+  setTimeout(()=>t.className='toast',2200);
+}
+
+function updateHud(){
+  document.getElementById('scoreNum').textContent=score;
+  document.getElementById('hudBar').style.width=(score/TOTAL*100)+'%';
+}
+
+function confetti(){
+  const emojis=['🌟','⭐','🎉','✨','🎊','🏆','💫','🥳'];
+  for(let i=0;i<12;i++){
+    const c=document.createElement('div');
+    c.className='confetti-piece';
+    c.textContent=pick(emojis);
+    c.style.left=rand(5,95)+'%';
+    c.style.animationDelay=(rand(0,6)/10)+'s';
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),2200);
+  }
+}
+
+// ══════════════════════════════════════════════
+//  QUESTION BUILDER
+// ══════════════════════════════════════════════
+function buildMCQ(id,qtext,options,correctIdx,hint,section){
+  // options: array of strings, correctIdx: 0-based index
+  const qNum = parseInt(id.replace('q',''));
+  let html = `<div class="q-block" id="block-${id}">`;
+  html += `<div class="q-text"><span class="q-num">${qNum}</span>${qtext}</div>`;
+  if(hint) html += `<div class="hint-pill">💡 ${hint}</div>`;
+  html += `<div class="choices">`;
+  options.forEach((opt,i)=>{
+    html += `<button class="choice-btn" onclick="checkMCQ('${id}',${i},${correctIdx},'${section}')" id="${id}-opt${i}">${opt}</button>`;
+  });
+  html += `</div><div class="feedback" id="fb-${id}"></div></div>`;
+  return html;
+}
+
+function buildShort(id,qtext,correct,hint,section,unit=''){
+  const qNum = parseInt(id.replace('q',''));
+  let html = `<div class="q-block" id="block-${id}">`;
+  html += `<div class="q-text"><span class="q-num">${qNum}</span>${qtext}</div>`;
+  if(hint) html += `<div class="hint-pill">💡 ${hint}</div>`;
+  html += `<div class="answer-row">
+    <input class="ans-input" type="text" id="inp-${id}" placeholder="Your answer…" onkeydown="if(event.key==='Enter')checkShort('${id}','${correct}','${section}','${unit}')">
+    ${unit?`<span style="font-weight:700;color:#555">${unit}</span>`:''}
+    <button class="check-btn" id="btn-${id}" onclick="checkShort('${id}','${correct}','${section}','${unit}')">✓ Check</button>
+  </div>
+  <div class="feedback" id="fb-${id}"></div></div>`;
+  return html;
+}
+
+// ══════════════════════════════════════════════
+//  CHECK FUNCTIONS
+// ══════════════════════════════════════════════
+function markBlock(id, isOk){
+  const block=document.getElementById('block-'+id);
+  block.classList.add(isOk?'answered-ok':'answered-err');
+  answered[id]= isOk ? 1 : 0;
+  if(isOk){score++;updateHud();}
+  if(Object.keys(answered).length===TOTAL && !document.getElementById('resultPanel').classList.contains('show')){
+    // auto nudge
+  }
+}
+
+function checkMCQ(id,chosen,correct,section){
+  if(answered[id]!==undefined) return;
+  const isOk = chosen===correct;
+  const fb=document.getElementById('fb-'+id);
+  for(let i=0;i<10;i++){
+    const b=document.getElementById(id+'-opt'+i);
+    if(!b) break;
+    b.disabled=true;
+    if(i===correct) b.classList.add('ok');
+    if(i===chosen && !isOk) b.classList.add('err');
+  }
+  fb.className='feedback show '+(isOk?'ok':'err');
+  fb.innerHTML = isOk ? '✅ Brilliant! That\'s correct!' : `❌ Not quite! The correct answer is highlighted in green.`;
+  markBlock(id,isOk);
+  if(isOk) showToast('⭐ Correct! +1 point','ok');
+  else     showToast('❌ Keep trying!','err');
+}
+
+function checkShort(id,correct,section,unit){
+  if(answered[id]!==undefined) return;
+  const inp=document.getElementById('inp-'+id);
+  const val=inp.value.trim().toLowerCase().replace(/\s/g,'');
+  const isOk = val===String(correct).toLowerCase().replace(/\s/g,'');
+  inp.className='ans-input '+(isOk?'ok':'err');
+  inp.disabled=true;
+  document.getElementById('btn-'+id).disabled=true;
+  const fb=document.getElementById('fb-'+id);
+  fb.className='feedback show '+(isOk?'ok':'err');
+  fb.innerHTML= isOk
+    ? `✅ Correct! Well done! Answer: <b>${correct}${unit?(' '+unit):''}</b>`
+    : `❌ Not quite. The correct answer is <b>${correct}${unit?(' '+unit):''}</b>. Review and try again on a new attempt!`;
+  markBlock(id,isOk);
+  if(isOk) showToast('⭐ Correct! +1 point','ok');
+  else     showToast('❌ The right answer was '+correct+(unit?' '+unit:''),'err');
+}
+
+// ══════════════════════════════════════════════
+//  SECTION 1 — FACTORS, MULTIPLES, MULTIPLICATION, DIVISION
+// ══════════════════════════════════════════════
+function buildSection1(){
+  const el=document.getElementById('sec1');
+
+  // Q1 MCQ: Factors
+  const n1=pick([12,18,20,24,30,36]);
+  const factorSets={12:[1,2,3,4,6,12],18:[1,2,3,6,9,18],20:[1,2,4,5,10,20],
+                    24:[1,2,3,4,6,8,12,24],30:[1,2,3,5,6,10,15,30],36:[1,2,3,4,6,9,12,18,36]};
+  const facts=factorSets[n1];
+  // Make correct option (count of factors) and wrong options
+  const correctCount=facts.length;
+  const wrongCounts=shuffle([correctCount-1,correctCount+1,correctCount+2].filter(x=>x>0&&x!==correctCount)).slice(0,3);
+  const opts1=shuffle([correctCount,...wrongCounts]);
+  const ci1=opts1.indexOf(correctCount);
+  const q1=buildMCQ('q1',`How many factors does <b>${n1}</b> have?`,opts1.map(x=>String(x)),ci1,'Factors are numbers that divide exactly into the number.','s1');
+
+  // Q2 Short: List factors or specific factor check — is X a factor of Y?
+  const n2a=pick([3,4,5,6]);
+  const n2b=n2a*rand(3,9);
+  const q2=buildShort('q2',`Is <b>${n2a}</b> a factor of <b>${n2b}</b>? Type <b>yes</b> or <b>no</b>.`,'yes','If '+n2b+' ÷ '+n2a+' has no remainder, it IS a factor.','s1');
+
+  // Q3 MCQ: Prime number
+  const primes=[2,3,5,7,11,13,17,19,23];
+  const nonPrimes=[4,6,8,9,10,12,14,15,16,18];
+  const pChoice=pick(primes);
+  const npChoices=shuffle(nonPrimes).slice(0,3);
+  const allOpts3=shuffle([pChoice,...npChoices]);
+  const ci3=allOpts3.indexOf(pChoice);
+  const q3=buildMCQ('q3',`Which number is a <b>prime number</b>?`,allOpts3.map(String),ci3,'A prime has exactly 2 factors: 1 and itself.','s1');
+
+  // Q4 Short: Long multiplication
+  const ma=rand(12,49), mb=rand(3,9);
+  const mp=ma*mb;
+  const q4=buildShort('q4',`Work out: <b>${ma} × ${mb}</b> = ?`,String(mp),'Multiply ones first, then tens. Don\'t forget to carry!','s1');
+
+  // Q5 Short: Long division
+  const db=pick([2,3,4,5,6]);
+  const dq=rand(10,25);
+  const da=db*dq;
+  const q5=buildShort('q5',`Work out: <b>${da} ÷ ${db}</b> = ?`,String(dq),'How many times does '+db+' go into each digit?','s1');
+
+  el.innerHTML=`
+    <div class="section-head">
+      <span class="ico">✖️</span>
+      <div><h2>Factors, Multiples & Multiplication</h2><p>5 Questions — 5 Marks</p></div>
+    </div>
+    <div class="section-body">${q1}${q2}${q3}${q4}${q5}</div>`;
+}
+
+// ══════════════════════════════════════════════
+//  SECTION 2 — MEASUREMENT
+// ══════════════════════════════════════════════
+function buildSection2(){
+  const el=document.getElementById('sec2');
+
+  // Q6 MCQ: cm to mm
+  const cm=rand(3,15);
+  const mm=cm*10;
+  const wrongs6=[mm-5,mm+5,mm+10].filter(x=>x>0);
+  const opts6=shuffle([mm,...wrongs6]).slice(0,4);
+  const ci6=opts6.indexOf(mm);
+  const q6=buildMCQ('q6',`Convert <b>${cm} cm</b> to millimetres (mm).`,opts6.map(x=>x+' mm'),ci6,'1 cm = 10 mm. Multiply cm × 10.','s2');
+
+  // Q7 Short: m to cm
+  const m7=rand(2,12);
+  const cm7=m7*100;
+  const q7=buildShort('q7',`Convert <b>${m7} metres</b> to centimetres.`,String(cm7),'1 m = 100 cm. Multiply metres × 100.','s2','cm');
+
+  // Q8 MCQ: kg to g
+  const kg=rand(2,8);
+  const g=kg*1000;
+  const opts8=shuffle([g,g-500,g+500,g+1000]).slice(0,4);
+  const ci8=opts8.indexOf(g);
+  const q8=buildMCQ('q8',`Convert <b>${kg} kg</b> to grams (g).`,opts8.map(x=>x+' g'),ci8,'1 kg = 1000 g. Multiply kg × 1000.','s2');
+
+  // Q9 Short: minutes in hours
+  const hrs=rand(2,5);
+  const mins=hrs*60;
+  const q9=buildShort('q9',`How many minutes are in <b>${hrs} hours</b>?`,String(mins),'1 hour = 60 minutes. Multiply hours × 60.','s2','minutes');
+
+  // Q10 MCQ: word problem litres → ml
+  const bottles=rand(3,6);
+  const litres=rand(1,2);
+  const totalMl=bottles*litres*1000;
+  const opts10=shuffle([totalMl,totalMl-500,totalMl+500,totalMl+1000]).slice(0,4);
+  const ci10=opts10.indexOf(totalMl);
+  const q10=buildMCQ('q10',
+    `Aisha has <b>${bottles} bottles</b>, each holding <b>${litres} litre</b>. How many ml in total?`,
+    opts10.map(x=>x+' ml'),ci10,'1 litre = 1000 ml. Find total litres first, then convert.','s2');
+
+  el.innerHTML=`
+    <div class="section-head">
+      <span class="ico">📏</span>
+      <div><h2>Units of Measurement</h2><p>5 Questions — 5 Marks</p></div>
+    </div>
+    <div class="section-body">${q6}${q7}${q8}${q9}${q10}</div>`;
+}
+
+// ══════════════════════════════════════════════
+//  SECTION 3 — PERIMETER & AREA
+// ══════════════════════════════════════════════
+function buildSection3(){
+  const el=document.getElementById('sec3');
+
+  // Q11 Short: Perimeter of rectangle
+  const l11=rand(5,15), w11=rand(3,10);
+  const p11=2*(l11+w11);
+  const q11=buildShort('q11',
+    `A rectangle has length <b>${l11} cm</b> and width <b>${w11} cm</b>. Find its <b>perimeter</b>.`,
+    String(p11),'Perimeter = 2 × (length + width)','s3','cm');
+
+  // Q12 Short: Area of rectangle
+  const l12=rand(5,15), w12=rand(3,12);
+  const a12=l12*w12;
+  const q12=buildShort('q12',
+    `Find the <b>area</b> of a rectangle with length <b>${l12} cm</b> and width <b>${w12} cm</b>.`,
+    String(a12),'Area = length × width','s3','cm²');
+
+  // Q13 MCQ: Perimeter of square
+  const s13=rand(4,12);
+  const p13=4*s13;
+  const opts13=shuffle([p13,3*s13,s13*s13,2*s13]).slice(0,4);
+  const ci13=opts13.indexOf(p13);
+  const q13=buildMCQ('q13',
+    `A square has a side of <b>${s13} cm</b>. What is its perimeter?`,
+    opts13.map(x=>x+' cm'),ci13,'Perimeter of square = 4 × side','s3');
+
+  // Q14 Short: Area of square
+  const s14=rand(3,10);
+  const a14=s14*s14;
+  const q14=buildShort('q14',
+    `What is the <b>area</b> of a square with side <b>${s14} cm</b>?`,
+    String(a14),'Area of square = side × side','s3','cm²');
+
+  // Q15 MCQ word problem: garden area
+  const gl=rand(6,14), gw=rand(4,9);
+  const ga=gl*gw;
+  const opts15=shuffle([ga,ga+gl,ga-gw,(gl+gw)*2]).slice(0,4);
+  const ci15=opts15.indexOf(ga);
+  const q15=buildMCQ('q15',
+    `A garden is <b>${gl} m</b> long and <b>${gw} m</b> wide. What is its area?`,
+    opts15.map(x=>x+' m²'),ci15,'Area = length × width','s3');
+
+  el.innerHTML=`
+    <div class="section-head">
+      <span class="ico">🔷</span>
+      <div><h2>Perimeter &amp; Area</h2><p>5 Questions — 5 Marks</p></div>
+    </div>
+    <div class="section-body">${q11}${q12}${q13}${q14}${q15}</div>`;
+}
+
+// ══════════════════════════════════════════════
+//  SECTION 4 — ANGLES
+// ══════════════════════════════════════════════
+function buildSection4(){
+  const el=document.getElementById('sec4');
+
+  // Q16 MCQ: identify angle type
+  const angTypes=[
+    {deg:rand(10,89),  type:'acute',  desc:'less than 90°'},
+    {deg:90,           type:'right',  desc:'exactly 90°'},
+    {deg:rand(91,179), type:'obtuse', desc:'between 90° and 180°'},
+    {deg:rand(181,359),type:'reflex', desc:'between 180° and 360°'},
+  ];
+  const chosen16=pick(angTypes);
+  const allTypes=['acute','right','obtuse','reflex'];
+  const ci16=allTypes.indexOf(chosen16.type);
+  const q16=buildMCQ('q16',
+    `An angle measures <b>${chosen16.deg}°</b>. What type of angle is it?`,
+    allTypes,ci16,'Acute < 90° | Right = 90° | Obtuse = 91–179° | Reflex > 180°','s4');
+
+  // Q17 Short: angles on straight line
+  const a17=rand(30,140);
+  const b17=180-a17;
+  const q17=buildShort('q17',
+    `Two angles are on a straight line. One angle is <b>${a17}°</b>. What is the other angle?`,
+    String(b17),'Angles on a straight line add up to 180°. So: 180° − '+a17+'° = ?','s4','°');
+
+  // Q18 Short: angles around a point
+  const a18=rand(60,200);
+  const b18=360-a18;
+  const q18=buildShort('q18',
+    `Angles around a point add up to 360°. One angle is <b>${a18}°</b>. Find the missing angle.`,
+    String(b18),'360° − '+a18+'° = ?','s4','°');
+
+  // Q19 MCQ: right angle turns
+  const turns=pick([1,2,3,4]);
+  const totalDeg=turns*90;
+  const opts19=shuffle([totalDeg,turns*45,turns*120,turns*60]).slice(0,4);
+  const ci19=opts19.indexOf(totalDeg);
+  const q19=buildMCQ('q19',
+    `A robot makes <b>${turns} right-angle turn${turns>1?'s':''}</b>. How many degrees does it turn in total?`,
+    opts19.map(x=>x+'°'),ci19,'One right angle = 90°. Multiply by the number of turns.','s4');
+
+  // Q20 MCQ: type given description
+  const descs=[
+    {text:'smaller than a right angle',ans:'Acute angle',wrong:['Obtuse angle','Reflex angle','Right angle']},
+    {text:'exactly a quarter turn',    ans:'Right angle',wrong:['Acute angle','Obtuse angle','Reflex angle']},
+    {text:'greater than 180°',         ans:'Reflex angle',wrong:['Acute angle','Right angle','Obtuse angle']},
+    {text:'between 90° and 180°',      ans:'Obtuse angle',wrong:['Acute angle','Right angle','Reflex angle']},
+  ];
+  const d20=pick(descs);
+  const opts20=shuffle([d20.ans,...d20.wrong]);
+  const ci20=opts20.indexOf(d20.ans);
+  const q20=buildMCQ('q20',
+    `Which type of angle is <b>${d20.text}</b>?`,
+    opts20,ci20,'Remember: Acute<90 | Right=90 | Obtuse=91–179 | Reflex>180','s4');
+
+  el.innerHTML=`
+    <div class="section-head">
+      <span class="ico">📐</span>
+      <div><h2>Angles</h2><p>5 Questions — 5 Marks</p></div>
+    </div>
+    <div class="section-body">${q16}${q17}${q18}${q19}${q20}</div>`;
+}
+
+// ══════════════════════════════════════════════
+//  SUBMIT ALL
+// ══════════════════════════════════════════════
+function submitAll(){
+  // force-mark any unanswered
+  for(let i=1;i<=TOTAL;i++){
+    const id='q'+i;
+    if(answered[id]===undefined){ answered[id]=0; }
+  }
+  score=Object.values(answered).reduce((a,b)=>a+b,0);
+  updateHud();
+
+  const pct=score/TOTAL;
+  let emoji,title,msg;
+  if(pct===1)       {emoji='🏆';title='PERFECT!';         msg='Absolutely incredible — 100%! You are a Grade 4 Maths Champion! 🎓';}
+  else if(pct>=0.8) {emoji='🌟';title='Excellent!';       msg='Outstanding work! You have a great understanding of all four topics!';}
+  else if(pct>=0.6) {emoji='😊';title='Good Job!';        msg='Well done! Review the topics you missed and try again!';}
+  else if(pct>=0.4) {emoji='💪';title='Keep Practising!'; msg='You\'re getting there! Study the hints and reload for a new attempt.';}
+  else              {emoji='📚';title='Keep Going!';       msg='Don\'t give up! Go back through the lessons and try again. You can do it!';}
+
+  // Section scores
+  const s1Score=[1,2,3,4,5].reduce((a,i)=>a+(answered['q'+i]||0),0);
+  const s2Score=[6,7,8,9,10].reduce((a,i)=>a+(answered['q'+i]||0),0);
+  const s3Score=[11,12,13,14,15].reduce((a,i)=>a+(answered['q'+i]||0),0);
+  const s4Score=[16,17,18,19,20].reduce((a,i)=>a+(answered['q'+i]||0),0);
+
+  const rp=document.getElementById('resultPanel');
+  document.getElementById('resEmoji').textContent=emoji;
+  document.getElementById('resTitle').textContent=title;
+  document.getElementById('resScore').textContent=score+' / '+TOTAL;
+  document.getElementById('resMsg').textContent=msg;
+  document.getElementById('resBreakdown').innerHTML=`
+    <div class="breakdown-item">✖️ Factors &amp; Mult<span>${s1Score}/5</span></div>
+    <div class="breakdown-item">📏 Measurement<span>${s2Score}/5</span></div>
+    <div class="breakdown-item">🔷 Perimeter &amp; Area<span>${s3Score}/5</span></div>
+    <div class="breakdown-item">📐 Angles<span>${s4Score}/5</span></div>`;
+  rp.classList.add('show');
+  rp.scrollIntoView({behavior:'smooth'});
+  if(pct>=0.8) confetti();
+}
+
+// ══════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════
+buildSection1();
+buildSection2();
+buildSection3();
+buildSection4();
+document.getElementById('totalNum').textContent=TOTAL;
+</script>
+</body>
+</html>
