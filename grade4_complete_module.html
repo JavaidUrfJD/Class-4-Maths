@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grade 4 – Complete Maths Module</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Space+Grotesk:wght@700;800&display=swap');
+
+  :root {
+    --bg: #0f172a;
+    --card: #1e293b;
+    --card2: #162032;
+    --border: #334155;
+    --t1: #38bdf8;   /* sky   */
+    --t2: #a78bfa;   /* violet */
+    --t3: #34d399;   /* emerald */
+    --t4: #fb923c;   /* orange */
+    --t5: #f472b6;   /* pink */
+    --t6: #facc15;   /* yellow */
+    --t7: #60a5fa;   /* blue */
+    --t8: #4ade80;   /* green */
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+    --radius: 16px;
+    --shadow: 0 8px 32px rgba(0,0,0,0.40);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Quicksand', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding-bottom: 60px;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 40px 24px 32px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 30% 50%, rgba(56,189,248,0.12) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 50%, rgba(167,139,250,0.10) 0%, transparent 60%);
+  }
+  .grade-badge {
+    display: inline-block;
+    border: 1.5px solid var(--t1);
+    color: var(--t1);
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 4px 16px;
+    border-radius: 999px;
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+    position: relative;
+  }
+  header h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(1.7rem, 5vw, 2.8rem);
+    color: #fff;
+    position: relative;
+    text-shadow: 0 0 40px rgba(56,189,248,0.3);
+  }
+  header p {
+    color: var(--muted);
+    font-size: 0.97rem;
+    margin-top: 8px;
+    position: relative;
+  }
+
+  /* ── NAV TABS ── */
+  .nav-scroll {
+    overflow-x: auto;
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 100;
+    scrollbar-width: none;
+  }
+  .nav-scroll::-webkit-scrollbar { display: none; }
+  .nav-tabs {
+    display: flex;
+    min-width: max-content;
+    padding: 0 16px;
+  }
+  .nav-tab {
+    padding: 14px 20px;
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 700;
+    font-size: 0.88rem;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    white-space: nowrap;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .nav-tab.active { color: #fff; }
+  .nav-tab:hover { color: var(--text); }
+
+  /* ── PANELS ── */
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  .container {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 32px 20px;
+  }
+
+  /* ── LEARNING GOALS ── */
+  .goals-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+  .goal-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    display: flex; gap: 12px; align-items: flex-start;
+    transition: transform 0.15s;
+  }
+  .goal-card:hover { transform: translateY(-3px); }
+  .goal-card .gi { font-size: 1.5rem; flex-shrink: 0; margin-top: 2px; }
+  .goal-card p { font-size: 0.91rem; line-height: 1.5; color: var(--text); }
+
+  /* ── ACTIVITY BOX ── */
+  .act {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px 22px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+  }
+  .act h3 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.15rem;
+    margin-bottom: 12px;
+  }
+  .act p.hint { font-size: 0.88rem; color: var(--muted); margin-bottom: 14px; }
+
+  /* ── QUIZ ── */
+  .q-list { list-style: none; display: flex; flex-direction: column; gap: 14px; }
+  .q-item {
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 18px;
+    transition: border-color 0.2s;
+  }
+  .q-item.correct { border-color: var(--t3); }
+  .q-item.wrong   { border-color: #f87171; }
+  .q-item .qtext { font-weight: 600; margin-bottom: 10px; font-size: 0.93rem; }
+  .q-opts { display: flex; gap: 8px; flex-wrap: wrap; }
+  .q-btn {
+    padding: 7px 18px;
+    border-radius: 999px;
+    border: 1.5px solid var(--border);
+    background: transparent;
+    color: var(--text);
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .q-btn:hover { border-color: var(--t1); color: var(--t1); }
+  .q-btn.ok  { background: var(--t3); border-color: var(--t3); color: #0f172a; }
+  .q-btn.bad { background: #f87171; border-color: #f87171; color: #0f172a; }
+  .q-fb { font-size: 0.82rem; margin-top: 8px; color: var(--muted); min-height: 18px; }
+
+  /* ── SCORE ── */
+  .score-bar {
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 22px;
+    text-align: center;
+    margin-top: 16px;
+    display: none;
+  }
+  .score-bar.show { display: block; }
+  .score-bar .big { font-family: 'Space Grotesk', sans-serif; font-size: 2rem; }
+
+  /* ── SHAPES CANVAS ── */
+  canvas { border-radius: 12px; background: var(--card2); display: block; }
+  .shape-btns { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+  .shape-btn {
+    padding: 8px 18px;
+    border-radius: 999px;
+    border: 1.5px solid var(--border);
+    background: transparent;
+    color: var(--text);
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 700;
+    font-size: 0.88rem;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .shape-btn.active, .shape-btn:hover { border-color: var(--t2); color: var(--t2); }
+
+  /* ── ANGLE PROTRACTOR ── */
+  .angle-wrap { display: flex; gap: 20px; flex-wrap: wrap; align-items: flex-start; }
+  .angle-wrap svg { flex: 0 0 auto; }
+  .angle-info { flex: 1; min-width: 200px; }
+  input[type=range] {
+    -webkit-appearance: none;
+    width: 100%; height: 6px;
+    background: var(--border); border-radius: 999px; outline: none;
+    margin: 10px 0;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px; height: 20px; border-radius: 50%;
+    background: var(--t5); cursor: pointer;
+  }
+
+  /* ── AREA/PERIMETER ── */
+  .ap-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media(max-width:500px){ .ap-grid { grid-template-columns: 1fr; } }
+  .ap-input { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
+  .ap-input label { font-size: 0.82rem; color: var(--muted); font-weight: 700; letter-spacing: 0.5px; }
+  .ap-input input {
+    background: var(--card2); border: 1.5px solid var(--border);
+    border-radius: 10px; padding: 10px 14px;
+    color: var(--text); font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.1rem; font-weight: 700; outline: none;
+    transition: border-color 0.2s;
+  }
+  .ap-input input:focus { border-color: var(--t6); }
+  .ap-result { background: var(--card2); border-radius: 12px; padding: 16px 18px; margin-top: 12px; }
+  .ap-result p { font-size: 0.95rem; margin-bottom: 4px; }
+  .ap-result span { font-family: 'Space Grotesk', sans-serif; font-size: 1.2rem; }
+
+  /* ── CONVERSION TABLE ── */
+  table { width: 100%; border-collapse: collapse; }
+  th, td { padding: 11px 14px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.92rem; }
+  th { color: var(--muted); font-weight: 700; font-size: 0.78rem; letter-spacing: 0.8px; text-transform: uppercase; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(255,255,255,0.03); }
+
+  /* ── FACTOR FINDER ── */
+  .factor-input-wrap { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 14px; }
+  .factor-input-wrap input {
+    background: var(--card2); border: 1.5px solid var(--border);
+    border-radius: 10px; padding: 10px 16px;
+    color: var(--text); font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.3rem; font-weight: 700; width: 130px; outline: none;
+    transition: border-color 0.2s;
+  }
+  .factor-input-wrap input:focus { border-color: var(--t4); }
+  .go-btn {
+    background: var(--t4); color: #0f172a;
+    border: none; border-radius: 999px;
+    padding: 10px 24px; font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.95rem; font-weight: 700; cursor: pointer;
+    transition: opacity 0.15s;
+  }
+  .go-btn:hover { opacity: 0.85; }
+  .factor-chips { display: flex; gap: 8px; flex-wrap: wrap; min-height: 40px; }
+  .chip {
+    background: var(--card2); border: 1.5px solid var(--border);
+    border-radius: 8px; padding: 6px 14px;
+    font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1rem;
+    color: var(--t4);
+    animation: pop 0.2s ease;
+  }
+  @keyframes pop { 0%{transform:scale(0.5);opacity:0} 100%{transform:scale(1);opacity:1} }
+  .prime-label {
+    display: inline-block;
+    background: var(--t2); color: #0f172a;
+    border-radius: 999px; padding: 4px 14px;
+    font-size: 0.8rem; font-weight: 700; margin-left: 10px;
+  }
+
+  /* ── SECTION HEADER ── */
+  .sec-hdr {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 20px;
+  }
+  .sec-hdr .dot {
+    width: 14px; height: 14px; border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .sec-hdr h2 { font-family: 'Space Grotesk', sans-serif; font-size: 1.25rem; }
+
+  footer { text-align: center; margin-top: 40px; font-size: 0.8rem; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="grade-badge">GRADE 4 · MATHS</div>
+  <h1>Complete Mathematics Module</h1>
+  <p>Single-Nation Curriculum · 8 Topic Areas · Interactive Activities</p>
+</header>
+
+<!-- NAV -->
+<div class="nav-scroll">
+  <div class="nav-tabs" id="navTabs">
+    <button class="nav-tab active" style="border-color:var(--t1);" onclick="showTab(0,this)">½ Fractions &amp; Decimals</button>
+    <button class="nav-tab" onclick="showTab(1,this)">⭐ Special Numbers</button>
+    <button class="nav-tab" onclick="showTab(2,this)">🔷 2D &amp; 3D Shapes</button>
+    <button class="nav-tab" onclick="showTab(3,this)">➕ Add &amp; Subtract</button>
+    <button class="nav-tab" onclick="showTab(4,this)">✖ Factors &amp; ×÷</button>
+    <button class="nav-tab" onclick="showTab(5,this)">📏 Measurement</button>
+    <button class="nav-tab" onclick="showTab(6,this)">▭ Perimeter &amp; Area</button>
+    <button class="nav-tab" onclick="showTab(7,this)">📐 Angles</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     PANEL 0 : FRACTIONS & DECIMALS
+═══════════════════════════════════════════════ -->
+<div class="panel active" id="p0">
+<div class="container">
+  <div class="sec-hdr"><div class="dot" style="background:var(--t1)"></div><h2>Fractions &amp; Decimals</h2></div>
+  <div class="goals-grid">
+    <div class="goal-card"><div class="gi">⚖️</div><p>I can <strong>compare, order, simplify, and add</strong> fractions.</p></div>
+    <div class="goal-card"><div class="gi">🔄</div><p>I can convert between <strong>improper fractions</strong> and <strong>mixed numbers</strong>.</p></div>
+    <div class="goal-card"><div class="gi">📐</div><p>I can convert between fractions, decimals, and <strong>units of length, mass, and capacity</strong>.</p></div>
+    <div class="goal-card"><div class="gi">↕️</div><p>I can order, compare, and convert between <strong>different types of fractions</strong>.</p></div>
+    <div class="goal-card"><div class="gi">🔢</div><p>I can read, write, compare, order, and <strong>round decimal numbers</strong> and place them on a number line.</p></div>
+  </div>
+
+  <div class="act">
+    <h3 style="color:var(--t1)">🧮 Fraction Converter</h3>
+    <p class="hint">Enter a numerator and denominator — see the decimal, simplified form, and whether it can be a mixed number.</p>
+    <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:14px;">
+      <input id="fn" type="number" min="1" value="7" style="background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:10px 14px;color:var(--text);font-family:'Space Grotesk',sans-serif;font-size:1.4rem;font-weight:700;width:90px;outline:none;text-align:center;" oninput="doFrac()">
+      <span style="font-size:2rem;color:var(--muted);">/</span>
+      <input id="fd" type="number" min="1" value="4" style="background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:10px 14px;color:var(--text);font-family:'Space Grotesk',sans-serif;font-size:1.4rem;font-weight:700;width:90px;outline:none;text-align:center;" oninput="doFrac()">
+    </div>
+    <div id="fracOut" style="background:var(--card2);border-radius:12px;padding:18px 20px;font-size:0.95rem;line-height:1.9;"></div>
+  </div>
+
+  <div class="act">
+    <h3 style="color:var(--t1)">❓ Fractions &amp; Decimals Quiz</h3>
+    <ul class="q-list" id="q0"></ul>
+    <div class="score-bar" id="s0"></div>
+  </div>
+</div></div>
+
+<!-- ═══════════════════════════════════════════════
+     PANEL 1 : SPECIAL NUMBERS
+═══════════════════════════════════════════════ -->
+<div class="panel" id="p1">
+<div class="container">
+  <div class="sec-hdr"><div class="dot" style="background:var(--t2)"></div><h2>Special Numbers &amp; Operators</h2></div>
+  <div class="goals-grid">
+    <div class="goal-card"><div class="gi">🔵</div><p>I can identify <strong>prime, composite, square, and cube numbers</strong>, and find the <strong>prime factors</strong> of a number.</p></div>
+    <div class="goal-card"><div class="gi">✖️</div><p>I can multiply fractions and decimals by whole numbers to solve <strong>multi-step word problems</strong>.</p></div>
+    <div class="goal-card"><div class="gi">📋</div><p>I can use <strong>long multiplication and division</strong> to solve problems, including finding the area of rectangles.</p></div>
+  </div>
+
+  <div class="act">
+    <h3 style="color:var(--t2)">🔍 Factor &amp; Prime Finder</h3>
+    <p class="hint">Enter any number (2–200) to find all its factors and discover whether it's prime, composite, square, or cube.</p>
+    <div class="factor-input-wrap">
+      <input type="number" id="factorNum" min="2" max="200" value="36" oninput="findFactors()">
+      <button class="go-btn" onclick="findFactors()">Find Factors</button>
+    </div>
+    <div class="factor-chips" id="factorChips"></div>
+    <div id="specialLabel" style="margin-top:14px;font-size:0.92rem;line-height:1.8;"></div>
+  </div>
+
+  <div class="act">
+    <h3 style="color:var(--t2)">⭐ Special Numbers Reference</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;">
+      <div style="background:var(--card2);border-radius:12px;padding:16px;">
+        <p style="font-weight:700;margin-bottom:6px;color:var(--t2)">Square Numbers</p>
+        <p style="font-size:0.88rem;color:var(--muted);">1, 4, 9, 16, 25, 36, 49, 64, 81, 100</p>
+        <p style="font-size:0.82rem;margin-top:6px;">e.g. 6² = 6×6 = <strong>36</strong></p>
+      </div>
+      <div style="background:var(--card2);border-radius:12px;padding:16px;">
+        <p style="font-weight:700;margin-bottom:6px;color:var(--t3)">Cube Numbers</p>
+        <p style="font-size:0.88rem;color:var(--muted);">1, 8, 27, 64, 125</p>
+        <p style="font-size:0.82rem;margin-top:6px;">e.g. 3³ = 3×3×3 = <strong>27</strong></p>
+      </div>
+      <div style="background:var(--card2);border-radius:12px;padding:16px;">
+        <p style="font-weight:700;margin-bottom:6px;color:var(--t4)">Prime Numbers</p>
+        <p style="font-size:0.88rem;color:var(--muted);">2, 3, 5, 7, 11, 13, 17, 19, 23…</p>
+        <p style="font-size:0.82rem;margin-top:6px;">Only factors: <strong>1 and itself</strong></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="act">
+    <h3 style="color:var(--t2)">❓ Special Numbers Quiz</h3>
+    <ul class="q-list" id="q1"></ul>
+    <div class="score-bar" id="s1"></div>
+  </div>
+</div></div>
+
+<!-- ═══════════════════════════════════════════════
+     PANEL 2 : 2D & 3D SHAPES
+═══════════════════════════════════════════════ -->
+<div class="panel" id="p2">
+<div class="container">
+  <div class="sec-hdr"><div class="dot" style="background:var(--t3)"></div><h2>2D &amp; 3D Shapes</h2></div>
+  <div class="goals-grid">
+    <div class="goal-card"><div class="gi">🔷</div><p>I can <strong>identify, compare, and sort</strong> 3D shapes by their properties.</p></div>
+    <div class="goal-card"><div class="gi">📦</div><p>I can <strong>recognise</strong> shapes like cubes, pyramids, and spheres and describe faces, edges, and vertices.</p></div>
+  </div>
+
+  <div class="act">
+    <h3 style="color:var(--t3)">🎨 Shape Explorer</h3>
+    <p class="hint">Click a shape to see its properties on the canvas.</p>
+    <canvas id="shapeCanvas" width="520" height="220" style="width:100%;max-width:520px;"></canvas>
+    <div class="shape-btns" id="shapeBtns"></div>
+    <div id="shapeInfo" style="margin-top:14px;background:var(--card2);border-radius:12px;padding:14px 16px;font-size:0.9rem;line-height:1.7;"></div>
+  </div>
+
+  <div class="act">
+    <h3 style="color:var(--t3)">❓ Shapes Quiz</h3>
+    <ul class="q-list" id="q2"></ul>
+    <div class="score-bar" id="s2"></div>
+  </div>
+</div></div>
+
+<!-- ═══════════════════════════════════════════════
+     PANEL 3 : ADDITION & SUBTRACTION
+═══════════════════════════════════════════════ -->
+<div class="panel" id="p3">
+<div class="container">
+  <div class="sec-hdr"><div class="dot" style="background:var(--t4)"></div><h2>Addition &amp; Subtraction Using Measurement</h2></div>
+  <div class="goals-grid">
+    <div class="goal-card"><div class="gi">🧮</div><p>I can accurately <strong>add and subtract whole numbers and decimals</strong> (up to 3 decimal places), both mentally and in writing.</p></div>
+    <div class="goal-card"><div class="gi">📐</div><p>I can solve <strong>multi-step word problems</strong> by converting, adding, and subtracting different metric measurements.</p></div>
+  </div>
+
+  <div class="act">
+    <h3 style="color:var(--t4)">🔢 Column Calculator</h3>
+    <p class="hint">Enter two decimal numbers and choose an operation to see a column-method working-out.</p>
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px;">
+      <input id="ca" type="number" step="0.001" value="12.750" style="background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:10px 14px;color:var(--text);font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:700;width:130px;outline:none;">
+      <select id="cop" style="background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;color:var(--text);font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:700;outline:none;">
+        <option>+</option><option>−</option>
+      </select>
+      <input id="cb" type="number" step="0.001" value="4.386" style="background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:10px 14px;color:var(--text);font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:700;width:130px;outline:none;">
+      <button class="go-btn" onclick="calcColumn()">Calculate</button>
+    </div>
+    <div id="colResult" style="background:var(--card2);border-radius:12px;padding:18px 20px;font-family:'Space Grotesk',sans-serif;font-size:1.1rem;min-height:60px;"></div>
+  </div>
+
+  <div class="act">
+    <h3 style="color:var(--t4)">📖 Word Problems</h3>
+    <ul class="q-list" id="q3"></ul>
+    <div class="score-bar" id="s3"></div>
+  </div>
+</div></div>
+
+<!-- ═══════════════════════════════════════════════
+     PANEL 4 : FACTORS, × & ÷
+═══════════════════════════════════════════════ -->
+<div class="panel" id="p4">
+<div class="container">
+  <div class="sec-hdr"><div class="dot" style="background:var(--t6)"></div><h2>Factors, Long Multiplication &amp; Division</h2></div>
+  <div class="goals-grid">
+    <div class="goal-card"><div class="gi">🔗</div><p>I can find <strong>factors, prime factors, and multiples</strong> of numbers.</p></div>
+    <div class="goal-card"><div class="gi">📋</div><p>I can use <strong>long multiplication and long division</strong> to solve problems, including finding the area of rectangles.</p></div>
+  </div>
+
+  <div class="act">
+    <h3 style="color:var(--t6)">✖️ Long Multiplication Trainer</h3>
+    <p class="hint">Enter a 2–3 digit number and a single-digit multiplier. See the grid (box) method.</p>
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px;">
+      <input id="ma" type="number" value="47" min="10" max="999" style="background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:10px 14px;color:var(--text);font-family:'Space Grotesk',sans-serif;font-size:1.4rem;font-weight:700;width:110px;outline:none;">
+      <span style="font-size:1.5rem;color:var(--muted);">×</span>
+      <input id="mb" type="number" value="6" min="2" max="9" style="background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:10px 14px;color:var(--text);font-family:'Space Grotesk',sans-serif;font-size:1.4rem;font-weight:700;width:80px;outline:none;">
+      <button class="go-btn" onclick="doGrid()">Show Grid</button>
+    </div>
+    <div id="gridOut" style="overflow-x:auto;"></div>
+  </div>
+
+  <div class="act">
+    <h3 style="color:var(--t6)">❓ Multiplication &amp; Division Quiz</h3>
+    <ul class="q-list" id="q4"></ul>
+    <div class="score-bar" id="s4"></div>
+  </div>
+</div></div>
+
+<!-- ═══════════════════════════════════════════════
+     PANEL 5 : UNITS OF MEASUREMENT
+═══════════════════════════════════════════════ -->
+<div class="panel" id="p5">
+<div class="container">
+  <div class="sec-hdr"><div class="dot" style="background:var(--t7)"></div><h2>Different Units of Measurement</h2></div>
+  <div class="goals-grid">
+    <div class="goal-card"><div class="gi">🔄</div><p>I can <strong>convert between different units</strong> of measurement.</p></div>
+    <div class="goal-card"><div class="gi">📝</div><p>I can <strong>apply measurement skills</strong> to solve word problems.</p></div>
+  </div>
+
+  <div class="act">
+    <h3 style="color:var(--t7)">📏 Unit Converter</h3>
+    <p class="hint">Type a value and choose units to convert.</p>
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px;">
+      <input id="uvIn" type="number" value="1" step="any" style="background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:10px 14px;color:var(--text);font-family:'Space Grotesk',sans-serif;font-size:1.2rem;font-weight:700;width:120px;outline:none;" oninput="doConvert()">
+      <select id="uFrom" style="background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;color:var(--text);font-family:'Quicksand',sans-serif;font-size:1rem;font-weight:700;outline:none;" onchange="doConvert()"></select>
+      <span style="color:var(--muted);">→</span>
+      <select id="uTo" style="background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;color:var(--text);font-family:'Quicksand',sans-serif;font-size:1rem;font-weight:700;outline:none;" onchange="doConvert()"></select>
+    </div>
+    <div id="convertOut" style="background:var(--card2);border-radius:12px;padding:18px 20px;font-family:'Space Grotesk',sans-serif;font-size:1.5rem;font-weight:700;min-height:60px;color:var(--t7);"></div>
+  </div>
+
+  <div class="act">
+    <h3 style="color:var(--t7)">📋 Quick-Reference Conversion Table</h3>
+    <table>
+      <thead><tr><th>Category</th><th>From</th><th>Multiply by</th><th>To get</th></tr></thead>
+      <tbody>
+        <tr><td>Length</td><td>km</td><td>× 1000</td><td>m</td></tr>
+        <tr><td>Length</td><td>m</td><td>× 100</td><td>cm</td></tr>
+        <tr><td>Length</td><td>cm</td><td>× 10</td><td>mm</td></tr>
+        <tr><td>Mass</td><td>kg</td><td>× 1000</td><td>g</td></tr>
+        <tr><td>Capacity</td><td>l</td><td>× 1000</td><td>ml</td></tr>
+        <tr><td>Time</td><td>hour</td><td>× 60</td><td>minutes</td></tr>
+        <tr><td>Time</td><td>minute</td><td>× 60</td><td>seconds</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div></div>
+
+<!-- ═══════════════════════════════════════════════
+     PANEL 6 : PERIMETER & AREA
+═══════════════════════════════════════════════ -->
+<div class="panel" id="p6">
+<div class="container">
+  <div class="sec-hdr"><div class="dot" style="background:var(--t8)"></div><h2>Perimeter &amp; Area</h2></div>
+  <div class="goals-grid">
+    <div class="goal-card"><div class="gi">📐</div><p>I can <strong>measure and calculate the perimeter and area</strong> of squares and rectangles, including using formulas.</p></div>
+  </div>
+
+  <div class="act">
+    <h3 style="color:var(--t8)">▭ Rectangle Calculator</h3>
+    <p class="hint">Enter the length and width to calculate area, perimeter, and see the shape drawn to scale.</p>
+    <div class="ap-grid">
+      <div>
+        <div class="ap-input"><label>Length (cm)</label><input id="rl" type="number" min="1" max="30" value="8" oninput="doRect()"></div>
+        <div class="ap-input"><label>Width (cm)</label><input id="rw" type="number" min="1" max="30" value="5" oninput="doRect()"></div>
+        <div class="ap-result">
+          <p>Perimeter = 2 × (l + w)</p><p><span id="perim">—</span></p>
+          <p style="margin-top:8px;">Area = l × w</p><p><span id="area">—</span></p>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:center;">
+        <canvas id="rectCanvas" width="220" height="180" style="width:100%;max-width:220px;background:var(--card2);border-radius:12px;"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="act">
+    <h3 style="color:var(--t8)">❓ Area &amp; Perimeter Quiz</h3>
+    <ul class="q-list" id="q6"></ul>
+    <div class="score-bar" id="s6"></div>
+  </div>
+</div></div>
+
+<!-- ═══════════════════════════════════════════════
+     PANEL 7 : ANGLES
+═══════════════════════════════════════════════ -->
+<div class="panel" id="p7">
+<div class="container">
+  <div class="sec-hdr"><div class="dot" style="background:var(--t5)"></div><h2>Angles</h2></div>
+  <div class="goals-grid">
+    <div class="goal-card"><div class="gi">📐</div><p>I can <strong>measure, draw, and identify</strong> different types of angles: acute, obtuse, right, and reflex.</p></div>
+    <div class="goal-card"><div class="gi">📏</div><p>I can use <strong>angle rules</strong> for straight lines and points (angles on a straight line = 180°; around a point = 360°).</p></div>
+  </div>
+
+  <div class="act">
+    <h3 style="color:var(--t5)">📐 Interactive Angle Measurer</h3>
+    <p class="hint">Drag the slider to change the angle and see its type.</p>
+    <div class="angle-wrap">
+      <svg id="angleSVG" viewBox="0 0 240 200" width="240" height="200" xmlns="http://www.w3.org/2000/svg">
+        <line x1="120" y1="160" x2="220" y2="160" stroke="#334155" stroke-width="3" stroke-linecap="round"/>
+        <line id="angleArm" x1="120" y1="160" x2="220" y2="160" stroke="#f472b6" stroke-width="3" stroke-linecap="round"/>
+        <path id="angleArc" d="" fill="rgba(244,114,182,0.15)" stroke="#f472b6" stroke-width="1.5"/>
+        <text id="angleDeg" x="120" y="100" text-anchor="middle" font-family="Space Grotesk,sans-serif" font-weight="700" font-size="22" fill="#f472b6">60°</text>
+      </svg>
+      <div class="angle-info">
+        <input type="range" id="angleSlider" min="1" max="359" value="60" oninput="updateAngle()">
+        <div id="angleType" style="font-family:'Space Grotesk',sans-serif;font-size:1.3rem;font-weight:700;margin-top:8px;color:var(--t5);">Acute</div>
+        <div id="angleDesc" style="font-size:0.88rem;color:var(--muted);margin-top:4px;line-height:1.5;"></div>
+        <div style="margin-top:20px;background:var(--card2);border-radius:10px;padding:14px;font-size:0.85rem;line-height:1.8;">
+          <p><strong style="color:var(--t3);">Acute:</strong> 0° – 89°</p>
+          <p><strong style="color:var(--t1);">Right:</strong> exactly 90°</p>
+          <p><strong style="color:var(--t4);">Obtuse:</strong> 91° – 179°</p>
+          <p><strong style="color:var(--t6);">Straight:</strong> exactly 180°</p>
+          <p><strong style="color:var(--t5);">Reflex:</strong> 181° – 359°</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="act">
+    <h3 style="color:var(--t5)">❓ Angles Quiz</h3>
+    <ul class="q-list" id="q7"></ul>
+    <div class="score-bar" id="s7"></div>
+  </div>
+</div></div>
+
+<footer>Grade 4 · Single-Nation Primary Maths Curriculum · 8 Topics</footer>
+
+<script>
+// ─── TAB NAV ───
+const colors=['var(--t1)','var(--t2)','var(--t3)','var(--t4)','var(--t6)','var(--t7)','var(--t8)','var(--t5)'];
+function showTab(i,btn){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(b=>{ b.classList.remove('active'); b.style.borderColor='transparent'; });
+  document.getElementById('p'+i).classList.add('active');
+  btn.classList.add('active'); btn.style.borderColor=colors[i];
+}
+
+// ─── FRACTION CONVERTER ───
+function gcd(a,b){ return b?gcd(b,a%b):a; }
+function doFrac(){
+  const n=parseInt(document.getElementById('fn').value)||1;
+  const d=parseInt(document.getElementById('fd').value)||1;
+  if(d===0){ document.getElementById('fracOut').innerHTML='<span style="color:#f87171;">Denominator cannot be 0</span>'; return; }
+  const dec=(n/d).toFixed(4).replace(/0+$/,'').replace(/\.$/,'');
+  const g=gcd(Math.abs(n),Math.abs(d));
+  const sn=n/g, sd=d/g;
+  const imp=n>d;
+  const mix=imp?`${Math.floor(n/d)} and ${n%d}/${sd}`:'—';
+  let html=`<p>As a decimal: <strong style="color:var(--t1);">${dec}</strong></p>
+  <p>Simplified: <strong style="color:var(--t3);">${sn}/${sd}</strong></p>
+  <p>Improper fraction: <strong>${imp?'Yes ✔':'No — numerator is smaller than denominator'}</strong></p>
+  ${imp?`<p>Mixed number: <strong style="color:var(--t4);">${mix}</strong></p>`:''}
+  <p style="margin-top:8px;color:var(--muted);font-size:0.85rem;">GCD of ${n} and ${d} = ${g}</p>`;
+  document.getElementById('fracOut').innerHTML=html;
+}
+doFrac();
+
+// ─── FACTOR FINDER ───
+function findFactors(){
+  const n=parseInt(document.getElementById('factorNum').value);
+  if(!n||n<2||n>200) return;
+  const factors=[];
+  for(let i=1;i<=n;i++) if(n%i===0) factors.push(i);
+  const chips=document.getElementById('factorChips');
+  chips.innerHTML=factors.map(f=>`<div class="chip">${f}</div>`).join('');
+  const isPrime=factors.length===2;
+  const isSquare=Number.isInteger(Math.sqrt(n));
+  const isCube=Number.isInteger(Math.cbrt(n));
+  const isComposite=!isPrime&&n>1;
+  // prime factors
+  let pf=[],tmp=n;
+  for(let p=2;p<=tmp;p++) while(tmp%p===0){pf.push(p);tmp/=p;}
+  let lbl=`<p>Number of factors: <strong>${factors.length}</strong></p>
+  <p>Prime factors: <strong style="color:var(--t2);">${[...new Set(pf)].join(' × ')}</strong></p>`;
+  const tags=[];
+  if(isPrime) tags.push(`<span style="background:var(--t2);color:#0f172a;border-radius:999px;padding:4px 14px;font-size:0.8rem;font-weight:700;">PRIME</span>`);
+  if(isComposite) tags.push(`<span style="background:var(--t4);color:#0f172a;border-radius:999px;padding:4px 14px;font-size:0.8rem;font-weight:700;">COMPOSITE</span>`);
+  if(isSquare) tags.push(`<span style="background:var(--t3);color:#0f172a;border-radius:999px;padding:4px 14px;font-size:0.8rem;font-weight:700;">SQUARE ✓</span>`);
+  if(isCube) tags.push(`<span style="background:var(--t1);color:#0f172a;border-radius:999px;padding:4px 14px;font-size:0.8rem;font-weight:700;">CUBE ✓</span>`);
+  lbl+=`<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;">${tags.join('')}</div>`;
+  document.getElementById('specialLabel').innerHTML=lbl;
+}
+findFactors();
+
+// ─── GRID MULTIPLICATION ───
+function doGrid(){
+  const a=parseInt(document.getElementById('ma').value)||47;
+  const b=parseInt(document.getElementById('mb').value)||6;
+  const aStr=String(a); const parts=[];
+  for(let i=0;i<aStr.length;i++) parts.push(parseInt(aStr[i])*Math.pow(10,aStr.length-1-i));
+  let rows=`<table style="border-collapse:collapse;font-family:'Space Grotesk',sans-serif;">
+    <tr><th style="padding:10px 16px;border:1px solid var(--border);color:var(--muted);">×</th>`;
+  parts.forEach(p=>rows+=`<th style="padding:10px 16px;border:1px solid var(--border);color:var(--t6);">${p}</th>`);
+  rows+=`</tr><tr><td style="padding:10px 16px;border:1px solid var(--border);color:var(--t6);">${b}</td>`;
+  let total=0;
+  parts.forEach(p=>{ const v=p*b; total+=v; rows+=`<td style="padding:10px 16px;border:1px solid var(--border);color:var(--text);">${v}</td>`; });
+  rows+=`</tr></table><p style="margin-top:12px;font-family:'Space Grotesk',sans-serif;font-size:1.1rem;">Total: ${parts.map(p=>p*b).join(' + ')} = <strong style="color:var(--t6);">${total}</strong></p>`;
+  document.getElementById('gridOut').innerHTML=rows;
+}
+doGrid();
+
+// ─── COLUMN CALCULATOR ───
+function calcColumn(){
+  const a=parseFloat(document.getElementById('ca').value)||0;
+  const b=parseFloat(document.getElementById('cb').value)||0;
+  const op=document.getElementById('cop').value;
+  const result=op==='+'?a+b:a-b;
+  const dp=Math.max((a.toString().split('.')[1]||'').length,(b.toString().split('.')[1]||'').length);
+  document.getElementById('colResult').innerHTML=
+    `<span style="color:var(--muted);">${a.toFixed(dp)}</span><br>
+     <span style="color:var(--muted);">${op} ${b.toFixed(dp)}</span><br>
+     <div style="border-top:2px solid var(--border);margin:6px 0;"></div>
+     <span style="color:var(--t4);font-size:1.5rem;">${result.toFixed(dp)}</span>`;
+}
+calcColumn();
+
+// ─── UNIT CONVERTER ───
+const units=[
+  {name:'km',base:1000000},{name:'m',base:1000},{name:'cm',base:10},{name:'mm',base:1},
+  {name:'kg',base:1000000,cat:'mass'},{name:'g',base:1000,cat:'mass'},{name:'mg',base:1,cat:'mass'},
+  {name:'l',base:1000,cat:'vol'},{name:'ml',base:1,cat:'vol'},
+];
+const uf=document.getElementById('uFrom'), ut=document.getElementById('uTo');
+units.forEach(u=>{ uf.innerHTML+=`<option>${u.name}</option>`; ut.innerHTML+=`<option>${u.name}</option>`; });
+ut.selectedIndex=1;
+function doConvert(){
+  const a=parseFloat(document.getElementById('uvIn').value)||0;
+  const from=units.find(u=>u.name===uf.value), to=units.find(u=>u.name===ut.value);
+  if(!from||!to){ document.getElementById('convertOut').textContent='Select compatible units'; return; }
+  const result=(a*from.base)/to.base;
+  document.getElementById('convertOut').textContent=`${a} ${from.name} = ${result.toLocaleString()} ${to.name}`;
+}
+doConvert();
+
+// ─── RECT CALCULATOR ───
+function doRect(){
+  const l=parseFloat(document.getElementById('rl').value)||8;
+  const w=parseFloat(document.getElementById('rw').value)||5;
+  document.getElementById('perim').textContent=`2 × (${l} + ${w}) = ${2*(l+w)} cm`;
+  document.getElementById('area').textContent=`${l} × ${w} = ${l*w} cm²`;
+  const cv=document.getElementById('rectCanvas'), ctx=cv.getContext('2d');
+  ctx.clearRect(0,0,220,180);
+  const scale=Math.min(180/Math.max(l,w),180/Math.max(l,w))*0.6;
+  const rw=l*scale, rh=w*scale;
+  const ox=(220-rw)/2, oy=(180-rh)/2;
+  ctx.fillStyle='rgba(74,222,128,0.15)';
+  ctx.strokeStyle='#4ade80';
+  ctx.lineWidth=2;
+  ctx.beginPath(); ctx.roundRect(ox,oy,rw,rh,6); ctx.fill(); ctx.stroke();
+  ctx.fillStyle='#94a3b8'; ctx.font='bold 13px Space Grotesk, sans-serif'; ctx.textAlign='center';
+  ctx.fillText(l+' cm', ox+rw/2, oy-6);
+  ctx.save(); ctx.translate(ox-6, oy+rh/2); ctx.rotate(-Math.PI/2);
+  ctx.fillText(w+' cm', 0, 0); ctx.restore();
+}
+doRect();
+
+// ─── ANGLES ───
+function updateAngle(){
+  const deg=parseInt(document.getElementById('angleSlider').value);
+  const svg=document.getElementById('angleSVG');
+  const rad=(deg)*Math.PI/180;
+  const cx=120, cy=160, r=90;
+  const x2=cx+r*Math.cos(-rad), y2=cy+r*Math.sin(-rad);
+  document.getElementById('angleArm').setAttribute('x2',x2); document.getElementById('angleArm').setAttribute('y2',y2);
+  // arc
+  const largeArc=deg>180?1:0;
+  const arcX=cx+40*Math.cos(-rad), arcY=cy+40*Math.sin(-rad);
+  document.getElementById('angleArc').setAttribute('d',`M${cx},${cy} L${cx+40},${cy} A40,40 0 ${largeArc} 0 ${arcX},${arcY} Z`);
+  document.getElementById('angleDeg').textContent=deg+'°';
+  document.getElementById('angleDeg').setAttribute('x',cx); document.getElementById('angleDeg').setAttribute('y',deg>270?150:cy-30);
+  let type='',desc='',color='';
+  if(deg<90){type='Acute';desc='Less than 90° — a sharp angle';color='var(--t3)';}
+  else if(deg===90){type='Right angle';desc='Exactly 90° — a perfect square corner';color='var(--t1)';}
+  else if(deg<180){type='Obtuse';desc='Between 90° and 180° — a wide angle';color='var(--t4)';}
+  else if(deg===180){type='Straight angle';desc='Exactly 180° — a flat line. Angles on a straight line always add to 180°';color='var(--t6)';}
+  else{type='Reflex';desc='Greater than 180° — more than a half turn. Angles around a point always add to 360°';color='var(--t5)';}
+  document.getElementById('angleType').textContent=type; document.getElementById('angleType').style.color=color;
+  document.getElementById('angleDesc').textContent=desc;
+  document.getElementById('angleArm').setAttribute('stroke',color);
+  document.getElementById('angleArc').setAttribute('stroke',color);
+  document.getElementById('angleDeg').setAttribute('fill',color);
+}
+updateAngle();
+
+// ─── SHAPES ───
+const shapes=[
+  {name:'Cube',fn:(c,w,h)=>{
+    const s=Math.min(w,h)*0.35, ox=(w-s*1.4)/2, oy=(h-s*1.2)/2;
+    c.strokeStyle='#34d399'; c.lineWidth=2.5;
+    [[ox,oy+s,ox+s,oy+s,ox+s,oy,ox,oy,ox,oy+s],[ox+s*0.4,oy-s*0.2,ox+s*1.4,oy-s*0.2,ox+s*1.4,oy+s*0.8,ox+s*0.4,oy+s,ox+s*0.4,oy-s*0.2]].forEach(pts=>{c.beginPath();for(let i=0;i<pts.length;i+=2){i?c.lineTo(pts[i],pts[i+1]):c.moveTo(pts[i],pts[i+1]);}c.stroke();});
+    c.beginPath();c.moveTo(ox+s,oy);c.lineTo(ox+s*1.4,oy-s*0.2);c.stroke();
+    c.beginPath();c.moveTo(ox+s,oy+s);c.lineTo(ox+s*1.4,oy+s*0.8);c.stroke();
+  },info:'<strong>Cube</strong><br>Faces: 6 (all squares) · Edges: 12 · Vertices: 8'},
+  {name:'Cuboid',fn:(c,w,h)=>{
+    const lx=80,ly=30,rw=w-160,rh=h*0.5,d=30,ox=(w-rw)/2,oy=(h-rh)/2;
+    c.strokeStyle='#38bdf8'; c.lineWidth=2.5;
+    const pts=[[ox,oy+rh,ox+rw,oy+rh,ox+rw,oy,ox,oy,ox,oy+rh]];
+    pts.forEach(ps=>{c.beginPath();for(let i=0;i<ps.length;i+=2){i?c.lineTo(ps[i],ps[i+1]):c.moveTo(ps[i],ps[i+1]);}c.stroke();});
+    [[ox+rw,oy,ox+rw+d,oy-d],[ox+rw,oy+rh,ox+rw+d,oy+rh-d],[ox,oy,ox+d,oy-d]].forEach(([x1,y1,x2,y2])=>{c.beginPath();c.moveTo(x1,y1);c.lineTo(x2,y2);c.stroke();});
+    c.beginPath();c.moveTo(ox+d,oy-d);c.lineTo(ox+rw+d,oy-d);c.lineTo(ox+rw+d,oy+rh-d);c.stroke();
+  },info:'<strong>Cuboid</strong><br>Faces: 6 (rectangles) · Edges: 12 · Vertices: 8'},
+  {name:'Pyramid',fn:(c,w,h)=>{
+    const s=140,bh=50,apex=[w/2,h*0.15],bl=[(w-s)/2,h-bh];
+    c.strokeStyle='#a78bfa'; c.lineWidth=2.5;
+    const base=[[bl[0],bl[1]],[bl[0]+s,bl[1]],[bl[0]+s+30,bl[1]-30],[bl[0]+30,bl[1]-30],[bl[0],bl[1]]];
+    c.beginPath(); base.forEach(([x,y],i)=>i?c.lineTo(x,y):c.moveTo(x,y)); c.stroke();
+    base.slice(0,4).forEach(([x,y])=>{ c.beginPath();c.moveTo(apex[0],apex[1]);c.lineTo(x,y);c.stroke(); });
+  },info:'<strong>Square Pyramid</strong><br>Faces: 5 · Edges: 8 · Vertices: 5'},
+  {name:'Sphere',fn:(c,w,h)=>{
+    const r=Math.min(w,h)*0.3, cx=w/2, cy=h/2;
+    const g=c.createRadialGradient(cx-r*0.3,cy-r*0.3,r*0.1,cx,cy,r);
+    g.addColorStop(0,'#fde68a'); g.addColorStop(1,'#f59e0b');
+    c.beginPath(); c.arc(cx,cy,r,0,Math.PI*2); c.fillStyle=g; c.fill();
+    c.strokeStyle='#fbbf24'; c.lineWidth=2; c.stroke();
+    c.beginPath(); c.ellipse(cx,cy,r,r*0.2,0,0,Math.PI); c.strokeStyle='rgba(255,255,255,0.3)'; c.stroke();
+  },info:'<strong>Sphere</strong><br>Faces: 1 curved · Edges: 0 · Vertices: 0'},
+  {name:'Cylinder',fn:(c,w,h)=>{
+    const r=60, cy2=h*0.7, cy1=h*0.3, cx=w/2;
+    c.strokeStyle='#fb923c'; c.fillStyle='rgba(251,146,60,0.15)'; c.lineWidth=2.5;
+    c.beginPath(); c.ellipse(cx,cy1,r,r*0.3,0,0,Math.PI*2); c.fill(); c.stroke();
+    c.beginPath(); c.ellipse(cx,cy2,r,r*0.3,0,0,Math.PI*2); c.fill(); c.stroke();
+    c.beginPath(); c.moveTo(cx-r,cy1); c.lineTo(cx-r,cy2); c.moveTo(cx+r,cy1); c.lineTo(cx+r,cy2); c.stroke();
+  },info:'<strong>Cylinder</strong><br>Faces: 3 (2 circles + 1 curved) · Edges: 2 · Vertices: 0'},
+];
+let activeShape=0;
+function drawShape(i){
+  activeShape=i;
+  document.querySelectorAll('.shape-btn').forEach((b,j)=>b.className='shape-btn'+(j===i?' active':''));
+  const cv=document.getElementById('shapeCanvas');
+  const ctx=cv.getContext('2d'); ctx.clearRect(0,0,cv.width,cv.height);
+  shapes[i].fn(ctx,cv.width,cv.height);
+  document.getElementById('shapeInfo').innerHTML=shapes[i].info;
+}
+const sb=document.getElementById('shapeBtns');
+shapes.forEach((s,i)=>{ const b=document.createElement('button'); b.className='shape-btn'+(i===0?' active':''); b.textContent=s.name; b.onclick=()=>drawShape(i); sb.appendChild(b); });
+drawShape(0);
+
+// ─── QUIZZES ───
+const allQuizzes=[
+  // Panel 0: Fractions
+  [{q:'What is 3/4 as a decimal?',opts:['0.25','0.50','0.75','1.25'],a:'0.75'},
+   {q:'Which fraction is equivalent to 2/3?',opts:['4/6','3/4','1/2','5/6'],a:'4/6'},
+   {q:'Convert the improper fraction 9/4 to a mixed number.',opts:['2¼','2½','1¾','3¼'],a:'2¼'},
+   {q:'Order from smallest to largest: 0.5, ¼, ¾',opts:['¼, 0.5, ¾','0.5, ¼, ¾','¾, 0.5, ¼','¼, ¾, 0.5'],a:'¼, 0.5, ¾'},
+   {q:'What is 1/5 as a decimal?',opts:['0.1','0.2','0.5','0.15'],a:'0.2'}],
+  // Panel 1: Special Numbers
+  [{q:'Which of these is a PRIME number?',opts:['9','15','17','21'],a:'17'},
+   {q:'What is 5 squared (5²)?',opts:['10','15','25','50'],a:'25'},
+   {q:'What is the cube of 3 (3³)?',opts:['6','9','27','81'],a:'27'},
+   {q:'Which is a composite number?',opts:['2','3','13','18'],a:'18'},
+   {q:'Which list shows ONLY prime factors of 12?',opts:['2,3','1,2,3','2,4,6','1,12'],a:'2,3'}],
+  // Panel 2: Shapes
+  [{q:'How many faces does a cube have?',opts:['4','5','6','8'],a:'6'},
+   {q:'A sphere has how many vertices?',opts:['0','1','2','4'],a:'0'},
+   {q:'A square pyramid has how many faces?',opts:['4','5','6','8'],a:'5'},
+   {q:'Which 3D shape has 2 circular faces?',opts:['Sphere','Cone','Cube','Cylinder'],a:'Cylinder'},
+   {q:'How many edges does a cuboid have?',opts:['6','8','12','16'],a:'12'}],
+  // Panel 3: Addition & Subtraction
+  [{q:'12.750 + 4.386 = ?',opts:['17.136','16.136','17.236','16.036'],a:'17.136'},
+   {q:'A piece of ribbon is 3.500 m long. You cut off 1.250 m. How much is left?',opts:['2.250 m','2.150 m','2.350 m','2.500 m'],a:'2.250 m'},
+   {q:'5.600 kg − 2.375 kg = ?',opts:['3.225 kg','3.125 kg','3.235 kg','3.275 kg'],a:'3.225 kg'},
+   {q:'What is 0.750 + 0.375?',opts:['1.025','1.125','1.225','1.100'],a:'1.125'},
+   {q:'A runner completes 2.450 km on Monday and 3.750 km on Tuesday. Total?',opts:['6.200 km','6.100 km','5.900 km','6.000 km'],a:'6.200 km'}],
+  // Panel 4: ×÷
+  [{q:'What are the factors of 12?',opts:['1,2,3,4,6,12','1,2,4,8,12','1,2,3,6,9,12','2,3,4,6,12'],a:'1,2,3,4,6,12'},
+   {q:'47 × 6 = ?',opts:['252','272','282','242'],a:'282'},
+   {q:'What is 96 ÷ 8?',opts:['11','12','13','14'],a:'12'},
+   {q:'What are the prime factors of 18?',opts:['2 and 3','2 and 9','3 and 6','1 and 18'],a:'2 and 3'},
+   {q:'A rectangle is 12 cm long and 7 cm wide. Its area is?',opts:['38 cm²','76 cm²','84 cm²','96 cm²'],a:'84 cm²'}],
+  // Panel 5: (no quiz for reference table panel — skip, will use blank)
+  [],
+  // Panel 6: Perimeter & Area
+  [{q:'A rectangle is 9 cm × 4 cm. What is its perimeter?',opts:['13 cm','26 cm','36 cm','18 cm'],a:'26 cm'},
+   {q:'A square has a side of 7 cm. What is its area?',opts:['28 cm²','49 cm²','14 cm²','21 cm²'],a:'49 cm²'},
+   {q:'Perimeter formula for a rectangle is:',opts:['l × w','2 × (l + w)','2l + w','l + w + h'],a:'2 × (l + w)'},
+   {q:'A rectangle has area 48 cm² and width 6 cm. What is its length?',opts:['6 cm','7 cm','8 cm','9 cm'],a:'8 cm'}],
+  // Panel 7: Angles
+  [{q:'An acute angle is:',opts:['Exactly 90°','Less than 90°','More than 90°','Exactly 180°'],a:'Less than 90°'},
+   {q:'Angles on a straight line add up to:',opts:['90°','180°','270°','360°'],a:'180°'},
+   {q:'A reflex angle is:',opts:['Less than 90°','Between 90° and 180°','Greater than 180°','Exactly 180°'],a:'Greater than 180°'},
+   {q:'Angles around a point add up to:',opts:['90°','180°','270°','360°'],a:'360°'},
+   {q:'An obtuse angle measures:',opts:['45°','90°','130°','185°'],a:'130°'}],
+];
+
+const qIds=['q0','q1','q2','q3','q4',null,'q6','q7'];
+const sIds=['s0','s1','s2','s3','s4',null,'s6','s7'];
+const answers2={}; const done2={};
+
+function buildQuizzes(){
+  allQuizzes.forEach((qs,pi)=>{
+    if(!qs.length||!qIds[pi]) return;
+    const ul=document.getElementById(qIds[pi]);
+    qs.forEach((q,i)=>{
+      const li=document.createElement('li'); li.className='q-item'; li.id=`pi${pi}q${i}`;
+      li.innerHTML=`<div class="qtext">${i+1}. ${q.q}</div>
+        <div class="q-opts">${q.opts.map(o=>`<button class="q-btn" onclick="pick(${pi},${i},'${o}')">${o}</button>`).join('')}</div>
+        <div class="q-fb" id="fb${pi}_${i}"></div>`;
+      ul.appendChild(li);
+    });
+  });
+}
+function pick(pi,qi,choice){
+  if(done2[pi]) return;
+  if(!answers2[pi]) answers2[pi]={};
+  answers2[pi][qi]=choice;
+  const q=allQuizzes[pi][qi], correct=q.a===choice;
+  const item=document.getElementById(`pi${pi}q${qi}`);
+  item.className='q-item '+(correct?'correct':'wrong');
+  item.querySelectorAll('.q-btn').forEach(b=>{ b.className='q-btn'+(b.textContent===q.a?' ok':(b.textContent===choice?' bad':'')); });
+  document.getElementById(`fb${pi}_${qi}`).textContent=correct?'✅ Correct!':'❌ The answer is '+q.a;
+  if(Object.keys(answers2[pi]).length===allQuizzes[pi].length){
+    done2[pi]=true;
+    const score=allQuizzes[pi].filter((q2,j)=>answers2[pi][j]===q2.a).length;
+    const bar=document.getElementById(sIds[pi]);
+    bar.className='score-bar show';
+    bar.innerHTML=`<div class="big">${score} / ${allQuizzes[pi].length}</div>
+    <div style="margin-top:4px;color:var(--muted);">${score===allQuizzes[pi].length?'🏆 Perfect score!':score>=allQuizzes[pi].length/2?'👍 Good effort!':'💪 Keep practising!'}</div>`;
+  }
+}
+buildQuizzes();
+</script>
+</body>
+</html>
